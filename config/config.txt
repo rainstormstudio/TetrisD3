@@ -1,0 +1,19 @@
+# tileset
+TILESET=./assets/tilesets/Curses_square_24.png
+
+# window info
+SCREENWIDTH=1280
+SCREENHEIGHT=960
+
+# key configs
+# uses SDL key names
+
+UP=W
+DOWN=S
+LEFT=A
+RIGHT=D
+ROTATE_RIGHT=W
+ROTATE_LEFT=Q
+DROP=Space
+PAUSE=Return
+CONFIRM=Return
