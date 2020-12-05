@@ -17,6 +17,10 @@ class GameField : public Component {
 
     int preoccupiedrows;
     std::vector<std::vector<Cell>> playfield;
+    std::vector<int> lines;
+    int clearCol;
+    double clearSpeed;
+    double clearProcess;
 
 public:
     GameField(int preoccupiedrows);
@@ -24,6 +28,12 @@ public:
     bool isOccupied(int row, int col);
 
     void occupy(int row, int col, CPixel* info);
+
+    void checklines();
+
+    void clearlines();
+
+    void droplines();
 
     void init() override;
 

@@ -76,8 +76,9 @@ void Game::update() {
         }
         case IN_GAME: {
             event->update();
+            Debug::msg("update MAP");
             manager->updateByLayer(Layer::MAP);
-            manager->updateByLayer(Layer::OBJECTS);
+            Debug::msg("update MAP done");
             if (event->input[QUIT]) {
                 state = NO_GAME;
             }

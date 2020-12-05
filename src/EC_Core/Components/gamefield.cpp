@@ -14,6 +14,9 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
             playfield[i][j] = {false, ' ', 0, 0, 0, 255, 0, 0, 0, 255};
         }
     }
+    clearSpeed = 30.0;
+    clearProcess = 0.0;
+    clearCol = 0;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -42,6 +45,61 @@ void GameField::occupy(int row, int col, CPixel* info) {
     delete transparent;
 }
 
+void GameField::checklines() {
+    std::cout << "check" << std::endl;
+    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
+    for (int i = 0; i < rows; i ++) {
+        bool flag = true;
+        for (int j = 0; j < cols; j ++) {
+            if (!playfield[i][j].occupied) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            lines.push_back(i);
+        }
+    }
+    if (!lines.empty()) {
+        clearCol = cols;
+    }
+}
+
+void GameField::clearlines() {
+    double deltatime = owner->game->getDeltaTime();
+    clearProcess += clearSpeed * deltatime;
+    if (clearProcess >= 1.0) {
+        clearCol --;
+        if (clearCol < 0) {
+            droplines();
+            return;
+        }
+        for (int j = 0; j < lines.size(); j ++) {
+            int row = lines[j];
+            int col = clearCol;
+            playfield[row][col] = {false, ' ', 0, 0, 0, 255, 0, 0, 0, 255};
+        }
+        clearProcess = 0.0;
+    }
+}
+
+void GameField::droplines() {
+    Debug::enabled = true;
+    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
+    for (auto row : lines) {
+        Debug::msg("row = " + std::to_string(row), 1);
+        for (int i = row - 1; i >= 0; i --) {
+            for (int j = 0; j < cols; j ++) {
+                playfield[i + 1][j] = playfield[i][j];
+            }
+        }
+    }
+    lines.clear();
+    std::cout << "cleared" << std::endl;
+    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
+    Debug::enabled = false;
+}
+
 void GameField::init() {
     for (int i = 0; i < preoccupiedrows; i ++) {
         for (int j = 0; j < cols; j ++) {
@@ -53,9 +111,15 @@ void GameField::init() {
 }
 
 void GameField::update() {
-    Entity* tetro = owner->manager.getEntityByName("tetro");
-    if (!tetro) {
-        owner->game->createTetro();
+    if (lines.empty()) {
+        owner->manager.updateByLayer(Layer::OBJECTS);
+        Entity* tetro = owner->manager.getEntityByName("tetro");
+        if (!tetro) {
+            owner->game->createTetro();
+        }
+        checklines();
+    } else {
+        clearlines();
     }
 }
 
