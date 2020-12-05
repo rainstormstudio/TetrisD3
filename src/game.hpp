@@ -6,11 +6,12 @@
 using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 class Config;
-class Graphics;
+class Media;
 class Command;
 class InputManager;
 class EntityManager;
 class Entity;
+class Mix_Chunk;
 
 enum GameState {
     NO_GAME,
@@ -22,12 +23,15 @@ enum GameState {
 
 class Game {
     Config* cfg;
-    Graphics* gfx;
+    Media* gfx;
     InputManager* event;
     EntityManager* manager;
 
     Time time_a;
     Time time_b;
+
+    Mix_Chunk* clearSFX;
+    Mix_Chunk* fallSFX;
 
 public:
     GameState state;
@@ -49,7 +53,10 @@ public:
 
     void setPause();
 
-    Graphics* getGFX() const;
+    void triggerClearSFX();
+    void triggerFallSFX();
+
+    Media* getGFX() const;
     InputManager* getEvent() const;
     Config* getCFG() const;
 

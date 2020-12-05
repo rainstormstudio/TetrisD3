@@ -9,5 +9,6 @@
 #include "./Components/collider.hpp"
 #include "./Components/gravity.hpp"
 #include "./Components/panel.hpp"
+#include "./Components/music.hpp"
 
 #endif

@@ -4,7 +4,6 @@
 #include "debug.hpp"
 
 Texture::Texture(std::string filename) {
-    Debug::msg("texture constructor start", 3);
     this->filename = "";
     numRows = 60;
     numCols = 60;
@@ -12,12 +11,10 @@ Texture::Texture(std::string filename) {
     for (int i = 0; i < numRows; ++i) {
         cpixels[i] = std::vector<CPixel*>(numCols);
         for (int j = 0; j < numCols; ++j) {
-            Debug::msg(std::to_string(i) + ", " + std::to_string(j), 4);
             cpixels[i][j] = nullptr;
         }
     }
     importTxt(filename);
-    Debug::msg("texture constructor end", 3);
 }
 
 Texture::~Texture() {

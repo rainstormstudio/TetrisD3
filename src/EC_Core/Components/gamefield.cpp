@@ -5,7 +5,7 @@
 #include "../../game.hpp"
 #include "../../EC_Core/entityManager.hpp"
 #include "../../texture.hpp"
-#include "../../graphics.hpp"
+#include "../../media.hpp"
 #include "../../debug.hpp"
 
 GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
@@ -64,6 +64,7 @@ void GameField::checklines() {
     }
     if (!lines.empty()) {
         clearCol = cols;
+        owner->game->triggerClearSFX();
     }
 }
 
@@ -141,7 +142,7 @@ void GameField::update() {
 }
 
 void GameField::render() {
-    Graphics* gfx = owner->game->getGFX();
+    Media* gfx = owner->game->getGFX();
     Transform* transform = owner->getComponent<Transform>();
     for (int i = rows - 1; i >= rows - 1 - 20; i --) {
         for (int j = 0; j < cols; j ++) {

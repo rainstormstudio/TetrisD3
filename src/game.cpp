@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include "debug.hpp"
 #include "config.hpp"
-#include "graphics.hpp"
+#include "media.hpp"
 #include "inputManager.hpp"
 #include "math.hpp"
 #include "command.hpp"
@@ -19,6 +19,10 @@ Game::Game() {
 }
 
 Game::~Game() {
+    Mix_FreeChunk(clearSFX);
+    Mix_FreeChunk(fallSFX);
+    clearSFX = nullptr;
+    fallSFX = nullptr;
     delete manager;
     delete event;
     delete gfx;
@@ -44,16 +48,21 @@ void Game::init() {
     Debug::msg("Game::init start");
     cfg = new Config("./config/config.txt");
     Debug::msg("cfg constructed", 1);
-    gfx = new Graphics("Line of Fire", cfg->tilesetPath, 16, 16, 0, cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
+    gfx = new Media("Line of Fire", cfg->tilesetPath, 16, 16, 0, cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
     Debug::msg("gfx constructed", 1);
     event = new InputManager(cfg);
     Debug::msg("event constructed", 1);
     manager = new EntityManager(this);
     Debug::msg("manager constructed", 1);
+    clearSFX = Mix_LoadWAV("./assets/audio/clear.wav");
+    if (!clearSFX) std::cerr << "Failed to load sound effect: SDL_mixer Error: " << Mix_GetError() << std::endl;
+    fallSFX = Mix_LoadWAV("./assets/audio/fall.wav");
+    if (!fallSFX) std::cerr << "Failed to load sound effect: SDL_mixer Error: " << Mix_GetError() << std::endl;
 
     Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
         gameField->addComponent<GameField>(0);
         gameField->addComponent<Transform>(12, 4);
+        gameField->addComponent<Music>("./assets/audio/theme.wav");
     }
 
     Entity* interface = manager->addEntity("Interface", Layer::UI); {
@@ -150,6 +159,9 @@ double Game::getDeltaTime() const {
 }
 
 void Game::setPause() {
+    Entity* gamefield = manager->getEntityByName("Playfield");
+    Music* music = gamefield->getComponent<Music>();
+    music->pauseMusic();
     if (state == IN_GAME) {
         state = PAUSE_MENU;
     } else if (state == PAUSE_MENU) {
@@ -157,7 +169,15 @@ void Game::setPause() {
     }
 }
 
-Graphics* Game::getGFX() const { return gfx; }
+void Game::triggerClearSFX() {
+    Mix_PlayChannel(-1, clearSFX, 0);
+}
+
+void Game::triggerFallSFX() {
+    Mix_PlayChannel(-1, fallSFX, 0);
+}
+
+Media* Game::getGFX() const { return gfx; }
 
 InputManager* Game::getEvent() const { return event; }
 

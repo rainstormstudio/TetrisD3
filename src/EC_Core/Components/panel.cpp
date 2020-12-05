@@ -1,6 +1,6 @@
 #include "panel.hpp"
 #include "transform.hpp"
-#include "../../graphics.hpp"
+#include "../../media.hpp"
 #include "../../texture.hpp"
 #include "../../debug.hpp"
 
@@ -52,7 +52,7 @@ void Panel::render() {
         CPixel{0, 0, 0, 0, 0, 131, 255, 51, 255}
     };
     Transform* transform = owner->getComponent<Transform>();
-    Graphics* gfx = owner->game->getGFX();
+    Media* gfx = owner->game->getGFX();
     int hours = timepassed / 3600.0;
     timepassed -= hours * 3600.0;
     int minutes = timepassed / 60.0;

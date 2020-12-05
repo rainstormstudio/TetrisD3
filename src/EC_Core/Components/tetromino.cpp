@@ -6,7 +6,7 @@
 #include "../../debug.hpp"
 #include "../../math.hpp"
 #include "../../texture.hpp"
-#include "../../graphics.hpp"
+#include "../../media.hpp"
 
 Tetromino::Tetromino() {
     direction = 0;
@@ -80,6 +80,7 @@ void Tetromino::moveDown() {
 void Tetromino::harddrop() {
     if (!hold) return;
     rowIndex = target.y;
+    owner->game->triggerFallSFX();
     owner->destroy();
 }
 
@@ -113,7 +114,7 @@ void Tetromino::update() {
 }
 
 void Tetromino::render() {
-    Graphics* gfx = owner->game->getGFX();
+    Media* gfx = owner->game->getGFX();
     Entity* interface = owner->manager.getEntityByName("Interface");
     Transform* interfaceTransform = interface->getComponent<Transform>();
 

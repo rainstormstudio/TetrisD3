@@ -1,7 +1,7 @@
 #include "appearance.hpp"
 #include "transform.hpp"
 #include "../../game.hpp"
-#include "../../graphics.hpp"
+#include "../../media.hpp"
 #include "../../texture.hpp"
 #include "../../debug.hpp"
 
@@ -48,7 +48,7 @@ Appearance::Appearance(Uint8 ch, Uint8 r, Uint8 g, Uint8 b, Uint8 a, Uint8 br, U
 }
 
 void Appearance::render() {
-    Graphics* gfx = owner->game->getGFX();
+    Media* gfx = owner->game->getGFX();
     Transform* transform = owner->getComponent<Transform>();
     if (cpixel) {
         gfx->drawPoint(cpixel, transform->position.x, transform->position.y);
