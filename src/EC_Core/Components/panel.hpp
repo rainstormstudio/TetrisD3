@@ -2,32 +2,35 @@
 #define PANEL_HPP
 
 #include "../entityManager.hpp"
+#include <chrono>
 
 class Panel : public Component {
-protected:
-    unsigned int width;
-    unsigned int height;
-    Vec2 posOnScreen;
+    const std::vector<int> points = {
+        0,
+        40,
+        100,
+        300,
+        1200
+    };
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+    std::chrono::time_point<std::chrono::high_resolution_clock> current_time;
+    int score;
+    int level;
+    int lines;
+
+    std::string prefix(int value, int width, char ch);
 public:
-    Panel(unsigned int width, unsigned int height, Vec2 posOnScreen);
+    Panel();
 
-    void drawBorderBold(std::string title, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    void init() override;
 
-    void drawBorder(std::string title, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    void addlines(int num);
 
-    void fillBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    void update() override;
 
-    void fillBackColorGradient(Uint8 r, Uint8 g, Uint8 b, Uint8 a, unsigned int threshold, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    void render() override;
 
-    void fillForeColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
-
-    void fillForeColorGradient(Uint8 r, Uint8 g, Uint8 b, Uint8 a, unsigned int threshold, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
-
-    void init() override {}
-
-    void update() override {}
-
-    void render() override {}
 };
 
 #endif

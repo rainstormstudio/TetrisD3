@@ -4,6 +4,7 @@
 #include "../entityManager.hpp"
 
 struct CPixel;
+class Entity;
 
 class GameField : public Component {
     const int rows = 40;
@@ -21,6 +22,8 @@ class GameField : public Component {
     int clearCol;
     double clearSpeed;
     double clearProcess;
+    Entity* currentTetro;
+    Entity* nextTetro;
 
 public:
     GameField(int preoccupiedrows);

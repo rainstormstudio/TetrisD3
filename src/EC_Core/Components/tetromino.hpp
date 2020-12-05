@@ -18,6 +18,7 @@ class Tetromino : public Component {
     SDL_Rect src;
     int rowIndex;
     int colIndex;
+    bool hold;
 
 public:
     enum TetroType {
@@ -34,6 +35,8 @@ public:
     Tetromino();
 
     ~Tetromino() override;
+
+    void setHold(bool flag);
 
     void rotateRight();
 

@@ -1,5 +1,7 @@
 #include "gamefield.hpp"
+#include "tetromino.hpp"
 #include "transform.hpp"
+#include "panel.hpp"
 #include "../../game.hpp"
 #include "../../EC_Core/entityManager.hpp"
 #include "../../texture.hpp"
@@ -17,6 +19,8 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     clearSpeed = 30.0;
     clearProcess = 0.0;
     clearCol = 0;
+    currentTetro = nullptr;
+    nextTetro = nullptr;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -46,8 +50,6 @@ void GameField::occupy(int row, int col, CPixel* info) {
 }
 
 void GameField::checklines() {
-    std::cout << "check" << std::endl;
-    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
     for (int i = 0; i < rows; i ++) {
         bool flag = true;
         for (int j = 0; j < cols; j ++) {
@@ -84,20 +86,17 @@ void GameField::clearlines() {
 }
 
 void GameField::droplines() {
-    Debug::enabled = true;
-    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
     for (auto row : lines) {
-        Debug::msg("row = " + std::to_string(row), 1);
         for (int i = row - 1; i >= 0; i --) {
             for (int j = 0; j < cols; j ++) {
                 playfield[i + 1][j] = playfield[i][j];
             }
         }
     }
+    Entity* interface = owner->manager.getEntityByName("Interface");
+    Panel* panel = interface->getComponent<Panel>();
+    panel->addlines(lines.size());
     lines.clear();
-    std::cout << "cleared" << std::endl;
-    for (auto row : lines) std::cout << " " << row; std::cout << std::endl;
-    Debug::enabled = false;
 }
 
 void GameField::init() {
@@ -107,15 +106,21 @@ void GameField::init() {
         }
     }
 
-    owner->game->createTetro();
+    currentTetro = owner->game->createTetro();
+    Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
+    tetromino->setHold(true);
+    nextTetro = owner->game->createTetro();
 }
 
 void GameField::update() {
     if (lines.empty()) {
         owner->manager.updateByLayer(Layer::OBJECTS);
-        Entity* tetro = owner->manager.getEntityByName("tetro");
-        if (!tetro) {
-            owner->game->createTetro();
+        std::vector<Entity*> tetros = owner->manager.getEntitiesByLayer(Layer::OBJECTS);
+        if (tetros.size() < 2) {
+            currentTetro = nextTetro;
+            Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
+            tetromino->setHold(true);
+            nextTetro = owner->game->createTetro();
         }
         checklines();
     } else {

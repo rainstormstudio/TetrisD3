@@ -20,6 +20,7 @@ public:
     void update();
     void updateByLayer(Layer::Type layer);
     void render();
+    void renderByLayer(Layer::Type layer);
 
     Entity* addEntity(std::string name, Layer::Type layer);
 

@@ -8,5 +8,6 @@
 #include "./Components/control.hpp"
 #include "./Components/collider.hpp"
 #include "./Components/gravity.hpp"
+#include "./Components/panel.hpp"
 
 #endif

@@ -6,6 +6,7 @@
 #include "../../debug.hpp"
 #include "../../math.hpp"
 #include "../../texture.hpp"
+#include "../../graphics.hpp"
 
 Tetromino::Tetromino() {
     direction = 0;
@@ -13,6 +14,7 @@ Tetromino::Tetromino() {
     src = {0, 0, 0, 0};
     rowIndex = 19;
     colIndex = 4;
+    hold = false;
 }
 
 Tetromino::~Tetromino() {
@@ -31,7 +33,12 @@ Tetromino::~Tetromino() {
     }
 }
 
+void Tetromino::setHold(bool flag) {
+    hold = flag;
+}
+
 void Tetromino::rotateRight() {
+    if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     int temp = (direction + 1) % 4;
     if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
@@ -39,6 +46,7 @@ void Tetromino::rotateRight() {
 }
 
 void Tetromino::rotateLeft() {
+    if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     int temp = (direction + 3) % 4;
     if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
@@ -46,18 +54,21 @@ void Tetromino::rotateLeft() {
 }
 
 void Tetromino::moveRight() {
+    if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     if (!collider->willCollide(rowIndex, colIndex + 1, src.x + direction * src.w, src.y, src.w, src.h))
         colIndex ++;
 }
 
 void Tetromino::moveLeft() {
+    if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     if (!collider->willCollide(rowIndex, colIndex - 1, src.x + direction * src.w, src.y, src.w, src.h))
         colIndex --;
 }
 
 void Tetromino::moveDown() {
+    if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     if (!collider->willCollide(rowIndex + 1, colIndex, src.x + direction * src.w, src.y, src.w, src.h))
         rowIndex ++;
@@ -73,21 +84,47 @@ void Tetromino::init() {
 }
 
 void Tetromino::update() {
-    Entity* playfield = owner->manager.getEntityByName("Playfield");
-    Transform* playfieldTransform = playfield->getComponent<Transform>();
+    if (hold) {
+        Entity* playfield = owner->manager.getEntityByName("Playfield");
+        Transform* playfieldTransform = playfield->getComponent<Transform>();
 
-    Appearance* appearance = owner->getComponent<Appearance>();
-    Transform* transform = owner->getComponent<Transform>();
+        Appearance* appearance = owner->getComponent<Appearance>();
+        Transform* transform = owner->getComponent<Transform>();
 
-    transform->position.x = playfieldTransform->position.x + 1 + colIndex;
-    transform->position.y = playfieldTransform->position.y -19 + rowIndex;
+        transform->position.x = playfieldTransform->position.x + 1 + colIndex;
+        transform->position.y = playfieldTransform->position.y -19 + rowIndex;
 
-    appearance->setSrc(src.x + direction * src.w, src.y, src.w, src.h);
-    Collider* collider = owner->getComponent<Collider>();
-    collider->changeCollider(src.x + direction * src.w, src.y, src.w, src.h);
+        appearance->setSrc(src.x + direction * src.w, src.y, src.w, src.h);
+        Collider* collider = owner->getComponent<Collider>();
+        collider->changeCollider(src.x + direction * src.w, src.y, src.w, src.h);
+    }
 }
 
-void Tetromino::render() {}
+void Tetromino::render() {
+    Graphics* gfx = owner->game->getGFX();
+    Entity* interface = owner->manager.getEntityByName("Interface");
+    Transform* interfaceTransform = interface->getComponent<Transform>();
+
+    Appearance* appearance = owner->getComponent<Appearance>();
+    Texture* texture = appearance->getTexture();
+    if (hold) {
+        SDL_Rect tsrc = {src.x + direction * src.w, src.y, src.w, src.h};
+        SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 1)), 
+                            static_cast<int>(round(interfaceTransform->position.y + 2)), 
+                            src.w, src.h};
+        if (src.w == 3) tdest.x ++;
+        if (src.h == 3) tdest.y ++;
+        gfx->drawTexture(texture, tsrc, tdest);
+    } else {
+        SDL_Rect tsrc = {src.x + direction * src.w, src.y, src.w, src.h};
+        SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 17)), 
+                            static_cast<int>(round(interfaceTransform->position.y + 1)), 
+                            src.w, src.h};
+        if (src.w == 3) tdest.x ++;
+        if (src.h == 3) tdest.y ++;
+        gfx->drawTexture(texture, tsrc, tdest);
+    }
+}
 
 
 

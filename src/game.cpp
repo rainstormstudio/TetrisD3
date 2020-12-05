@@ -6,6 +6,7 @@
 #include "math.hpp"
 #include "command.hpp"
 #include "./EC_Core/entityManager.hpp"
+#include "./EC_Core/entity.hpp"
 #include "./EC_Core/componentList.hpp"
 
 Game::Game() {
@@ -26,7 +27,7 @@ Game::~Game() {
 
 bool Game::loop() const { return state != NO_GAME; }
 
-void Game::createTetro() {
+Entity* Game::createTetro() {
     Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
         tetro->addComponent<Transform>();
         tetro->addComponent<Tetromino>();
@@ -35,6 +36,7 @@ void Game::createTetro() {
         tetro->addComponent<Collider>();
         tetro->addComponent<Gravity>(1);
     }
+    return tetro;
 }
 
 void Game::init() {
@@ -52,9 +54,13 @@ void Game::init() {
     Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
         gameField->addComponent<GameField>(0);
         gameField->addComponent<Transform>(12, 4);
-        gameField->addComponent<Appearance>("./assets/txt/border.txt", 0, 0, 12, 22);
     }
 
+    Entity* interface = manager->addEntity("Interface", Layer::UI); {
+        interface->addComponent<Transform>(7, 4);
+        interface->addComponent<Appearance>("./assets/txt/UI.txt", 0, 0, 26, 22);
+        interface->addComponent<Panel>();
+    }
 
     state = IN_GAME;
     Debug::msg("Game::init done");
@@ -78,6 +84,7 @@ void Game::update() {
             event->update();
             Debug::msg("update MAP");
             manager->updateByLayer(Layer::MAP);
+            manager->updateByLayer(Layer::UI);
             Debug::msg("update MAP done");
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -111,7 +118,9 @@ void Game::render() {
         }
         case IN_GAME: {
             gfx->clear();
-            manager->render();
+            manager->renderByLayer(Layer::MAP);
+            manager->renderByLayer(Layer::OBJECTS);
+            manager->renderByLayer(Layer::UI);
             gfx->render();
             break;
         }

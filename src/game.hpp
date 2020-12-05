@@ -10,6 +10,7 @@ class Graphics;
 class Command;
 class InputManager;
 class EntityManager;
+class Entity;
 
 enum GameState {
     NO_GAME,
@@ -38,7 +39,7 @@ public:
     
     void init();
 
-    void createTetro();
+    Entity* createTetro();
 
     void update();
     void render();

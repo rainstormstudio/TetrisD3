@@ -65,6 +65,12 @@ void EntityManager::render() {
     }
 }
 
+void EntityManager::renderByLayer(Layer::Type layer) {
+    for (auto& entity : getEntitiesByLayer(layer)) {
+        entity->render();
+    }
+}
+
 Entity* EntityManager::addEntity(std::string name, Layer::Type layer) {
     Entity* entity = new Entity(game, *this, name, layer);
     entities.emplace_back(entity);
