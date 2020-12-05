@@ -9,13 +9,15 @@ public:
     Vec2 position;
 
     Transform() : position{0, 0} {}
-    Transform(int x, int y) : position{x, y} {}
+    Transform(double x, double y) : position{x, y} {}
 
     void init() override {}
 
     void update() override {}
 
     void render() override {}
+
+    ~Transform() {}
 };
 
 #endif

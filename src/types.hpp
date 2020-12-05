@@ -16,12 +16,14 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <chrono>
 
 struct Vec2 {
-    int x = 0;
-    int y = 0;
+    const double epsilon = 0.000001;
+    double x = 0.0;
+    double y = 0.0;
 
-    Vec2(int x, int y) : x(x), y(y) {}
+    Vec2(double x, double y) : x(x), y(y) {}
 
     Vec2 operator+(const Vec2 &v) {
         return Vec2(x + v.x, y + v.y);
@@ -44,7 +46,7 @@ struct Vec2 {
     }
 
     bool operator==(const Vec2 &v) {
-        return x == v.x && y == v.y;
+        return abs(x - v.x) < epsilon && abs(y - v.y) < epsilon;
     }
 
     bool operator!=(const Vec2 &v) {

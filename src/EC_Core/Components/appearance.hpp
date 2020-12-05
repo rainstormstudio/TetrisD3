@@ -20,7 +20,15 @@ public:
 
     void setDest(int x, int y, int w, int h);
 
+    SDL_Rect getSrc() const { return src; }
+
+    SDL_Rect getDest() const { return dest; }
+
     Appearance(Uint8 ch, Uint8 r, Uint8 g, Uint8 b, Uint8 a, Uint8 br, Uint8 bg, Uint8 bb, Uint8 ba);
+
+    Texture* getTexture() {
+        return texture;
+    }
 
     void init() override {}
 
@@ -28,7 +36,7 @@ public:
 
     void render() override;
 
-    ~Appearance();
+    ~Appearance() override;
 };
 
 #endif

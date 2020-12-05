@@ -26,8 +26,19 @@ Game::~Game() {
 
 bool Game::loop() const { return state != NO_GAME; }
 
+void Game::createTetro() {
+    Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
+        tetro->addComponent<Transform>();
+        tetro->addComponent<Tetromino>();
+        tetro->addComponent<Appearance>("./assets/txt/tetrominoes.txt");
+        tetro->addComponent<Control>();
+        tetro->addComponent<Collider>();
+        tetro->addComponent<Gravity>(1);
+    }
+}
+
 void Game::init() {
-    Debug::enabled = false;
+    Debug::enabled = true;
     Debug::msg("Game::init start");
     cfg = new Config("./config/config.txt");
     Debug::msg("cfg constructed", 1);
@@ -38,19 +49,24 @@ void Game::init() {
     manager = new EntityManager(this);
     Debug::msg("manager constructed", 1);
 
-    Entity* gameField = manager->addEntity("gameField", Layer::OBJECTS); {
+    Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
+        gameField->addComponent<GameField>(0);
         gameField->addComponent<Transform>(12, 4);
         gameField->addComponent<Appearance>("./assets/txt/border.txt", 0, 0, 12, 22);
     }
 
+
     state = IN_GAME;
     Debug::msg("Game::init done");
     Debug::line();
+
+    time_a = std::chrono::high_resolution_clock::now();
 }
 
 void Game::update() {
+    time_b = std::chrono::high_resolution_clock::now();
     Debug::enabled = false;
-    Debug::msg("Game::update start");
+    Debug::msg("update start");
     switch (state) {
         case NO_GAME: {
             break;
@@ -60,16 +76,26 @@ void Game::update() {
         }
         case IN_GAME: {
             event->update();
+            manager->updateByLayer(Layer::MAP);
+            manager->updateByLayer(Layer::OBJECTS);
             if (event->input[QUIT]) {
                 state = NO_GAME;
             }
             break;
         }
         case PAUSE_MENU: {
+            event->update();
+            if (event->input[QUIT]) {
+                state = NO_GAME;
+            } else if (event->input[PAUSE]) {
+                setPause();
+            }
             break;
         }
     }
-    Debug::msg("Game::update done");
+    time_a = time_b;
+    Debug::msg("update end");
+    Debug::line();
 }
 
 void Game::render() {
@@ -89,10 +115,26 @@ void Game::render() {
             break;
         }
         case PAUSE_MENU: {
+            gfx->clear();
+            manager->render();
+            gfx->render();
             break;
         }
     }
     Debug::msg("Game::render done");
+}
+
+double Game::getDeltaTime() const {
+    double deltatime = std::chrono::duration_cast<std::chrono::microseconds>(time_b - time_a).count() / 1000000.0f;
+    return deltatime;
+}
+
+void Game::setPause() {
+    if (state == IN_GAME) {
+        state = PAUSE_MENU;
+    } else if (state == PAUSE_MENU) {
+        state = IN_GAME;
+    }
 }
 
 Graphics* Game::getGFX() const { return gfx; }

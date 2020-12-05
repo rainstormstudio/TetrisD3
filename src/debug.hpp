@@ -3,16 +3,17 @@
 
 #include <iostream>
 
-namespace Debug {
-    static bool enabled = false;
+class Debug {
+public:
+    static bool enabled;
 
-    void msg(std::string msg);
+    static void msg(std::string msg);
 
-    void msg(std::string msg, unsigned int level);
+    static void msg(std::string msg, unsigned int level);
 
-    void line();
+    static void line();
 
-    void line(unsigned int level);
+    static void line(unsigned int level);
 };
 
 #endif

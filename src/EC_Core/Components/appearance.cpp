@@ -3,11 +3,14 @@
 #include "../../game.hpp"
 #include "../../graphics.hpp"
 #include "../../texture.hpp"
+#include "../../debug.hpp"
 
 Appearance::Appearance(std::string filename) {
+    Debug::msg("appearance start", 2);
     texture = new Texture(filename);
     src = {0, 0, 0, 0};
     cpixel = nullptr;
+    Debug::msg("appearance end", 2);
 }
 
 Appearance::Appearance(std::string filename, int x, int y, int w, int h) {
@@ -50,7 +53,7 @@ void Appearance::render() {
     if (cpixel) {
         gfx->drawPoint(cpixel, transform->position.x, transform->position.y);
     } else if (texture) {
-        setDest(transform->position.x, transform->position.y, src.w, src.h);
+        setDest(round(transform->position.x), round(transform->position.y), src.w, src.h);
         gfx->drawTexture(texture, src, dest);
     }
 }

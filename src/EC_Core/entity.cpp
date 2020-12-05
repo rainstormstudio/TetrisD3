@@ -2,6 +2,7 @@
 #include "component.hpp"
 #include "entityManager.hpp"
 #include "../game.hpp"
+#include "../debug.hpp"
 
 Entity::Entity(Game* game, EntityManager& manager)
     : game{game}, manager{manager} {
@@ -9,6 +10,9 @@ Entity::Entity(Game* game, EntityManager& manager)
 }
 
 Entity::~Entity() {
+    Debug::enabled = true;
+    Debug::msg("delete entity's components");
+    Debug::enabled = false;
     for (auto& component : components) {
         delete component;
     }

@@ -30,6 +30,27 @@ struct CPixel {
     Uint8 r, g, b, a;
     Uint8 br, bg, bb, ba;
 
+    CPixel() {
+        ch = 0;
+        r = 0; g = 0; b = 0; a = 0;
+        br = 0; bg = 0; bb = 0; ba = 0;
+    }
+
+    CPixel(Uint8 ch, Uint8 r, Uint8 g, Uint8 b, Uint8 a, Uint8 br, Uint8 bg, Uint8 bb, Uint8 ba)
+        : ch{ch}, r{r}, g{g}, b{b}, a{a}, br{br}, bg{bg}, bb{bb}, ba{ba} {}
+
+    CPixel(const CPixel &other) {
+        ch = other.ch;
+        r = other.r;
+        g = other.g;
+        b = other.b;
+        a = other.a;
+        br = other.br;
+        bg = other.bg;
+        bb = other.bb;
+        ba = other.ba;
+    }
+
     bool operator==(const CPixel& other) {
         return ch == other.ch 
                 && r == other.r 
@@ -41,13 +62,17 @@ struct CPixel {
                 && bb == other.bb
                 && ba == other.ba;
     }
+
+    bool operator!=(const CPixel& other) {
+        return !(*this == other);
+    }
 };
 
 class Texture {
     std::string filename;
     unsigned int numRows;
     unsigned int numCols;
-    std::vector<std::vector<CPixel>> cpixels;
+    std::vector<std::vector<CPixel*>> cpixels;
 public:
     /**
      * @brief Construct a new Texture object
@@ -55,6 +80,18 @@ public:
      * @param filename the txt texture file to be imported
      */
     Texture(std::string filename);
+
+    /**
+     * @brief Destroy the Texture object
+     * 
+     */
+    ~Texture();
+
+    /**
+     * @brief clear the texture
+     * 
+     */
+    void clear();
 
     /**
      * @brief import a txt texture file
@@ -90,9 +127,9 @@ public:
      * 
      * @param x the column number
      * @param y the row number
-     * @return CPixel 
+     * @return CPixel*
      */
-    CPixel getInfo(int x, int y) const;
+    CPixel* getInfo(int x, int y) const;
 };
 
 #endif

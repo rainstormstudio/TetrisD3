@@ -1,19 +1,37 @@
 #include "texture.hpp"
 #include <fstream>
 #include <iostream>
+#include "debug.hpp"
 
 Texture::Texture(std::string filename) {
+    Debug::msg("texture constructor start", 3);
     this->filename = "";
     numRows = 60;
     numCols = 60;
-    cpixels = std::vector<std::vector<CPixel>>(numRows);
+    cpixels = std::vector<std::vector<CPixel*>>(numRows);
     for (int i = 0; i < numRows; ++i) {
-        cpixels[i] = std::vector<CPixel>(numCols);
+        cpixels[i] = std::vector<CPixel*>(numCols);
         for (int j = 0; j < numCols; ++j) {
-            cpixels[i][j] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+            Debug::msg(std::to_string(i) + ", " + std::to_string(j), 4);
+            cpixels[i][j] = nullptr;
         }
     }
     importTxt(filename);
+    Debug::msg("texture constructor end", 3);
+}
+
+Texture::~Texture() {
+    clear();
+}
+
+void Texture::clear() {
+    for (int i = 0; i < numRows; i ++) {
+        for (int j = 0; j < numCols; j ++) {
+            delete cpixels[i][j];
+        }
+        cpixels[i].clear();
+    }
+    cpixels.clear();
 }
 
 void Texture::importTxt(std::string filename) {
@@ -37,7 +55,7 @@ void Texture::importTxt(std::string filename) {
                     token = "";
                 } else if (line[i] == ')') {
                     info[index] = static_cast<Uint8>(std::stoi(token));
-                    cpixels[row][col] = {info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8]};
+                    cpixels[row][col] = new CPixel(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8]);
                     ++col;
                 } else if (line[i] == ',') {
                     info[index] = static_cast<Uint8>(std::stoi(token));
@@ -64,11 +82,11 @@ unsigned int Texture::getHeight() const { return numRows; }
 
 std::string Texture::getFilename() const { return filename; }
 
-CPixel Texture::getInfo(int x, int y) const {
+CPixel* Texture::getInfo(int x, int y) const {
     if (x >= 0 && x < numCols
         && y >= 0 && y < numRows) {
         return cpixels[y][x];
     } else {
-        return {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        return nullptr;
     }
 }

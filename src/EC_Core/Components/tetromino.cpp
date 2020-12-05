@@ -1,0 +1,94 @@
+#include "tetromino.hpp"
+#include "transform.hpp"
+#include "appearance.hpp"
+#include "collider.hpp"
+#include "gamefield.hpp"
+#include "../../debug.hpp"
+#include "../../math.hpp"
+#include "../../texture.hpp"
+
+Tetromino::Tetromino() {
+    direction = 0;
+    type = TETRO_I;
+    src = {0, 0, 0, 0};
+    rowIndex = 19;
+    colIndex = 4;
+}
+
+Tetromino::~Tetromino() {
+    Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    GameField* playfield = gamefield->getComponent<GameField>();
+
+    Appearance* appearance = owner->getComponent<Appearance>();
+    Texture* texture = appearance->getTexture();
+    if (!texture) return;
+    SDL_Rect src = appearance->getSrc();
+    for (int x = 0; x < src.h; x ++) {
+        for (int y = 0; y < src.w; y ++) {
+            CPixel* info = texture->getInfo(y + src.x, x + src.y);
+            playfield->occupy(rowIndex + x, colIndex + y, info);
+        }
+    }
+}
+
+void Tetromino::rotateRight() {
+    Collider* collider = owner->getComponent<Collider>();
+    int temp = (direction + 1) % 4;
+    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
+        direction = temp;
+}
+
+void Tetromino::rotateLeft() {
+    Collider* collider = owner->getComponent<Collider>();
+    int temp = (direction + 3) % 4;
+    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
+        direction = temp;
+}
+
+void Tetromino::moveRight() {
+    Collider* collider = owner->getComponent<Collider>();
+    if (!collider->willCollide(rowIndex, colIndex + 1, src.x + direction * src.w, src.y, src.w, src.h))
+        colIndex ++;
+}
+
+void Tetromino::moveLeft() {
+    Collider* collider = owner->getComponent<Collider>();
+    if (!collider->willCollide(rowIndex, colIndex - 1, src.x + direction * src.w, src.y, src.w, src.h))
+        colIndex --;
+}
+
+void Tetromino::moveDown() {
+    Collider* collider = owner->getComponent<Collider>();
+    if (!collider->willCollide(rowIndex + 1, colIndex, src.x + direction * src.w, src.y, src.w, src.h))
+        rowIndex ++;
+    else 
+        owner->destroy();
+}
+
+void Tetromino::init() {
+    int randomType = Math::randint(0, 6);
+    Debug::msg(std::to_string(randomType), 1);
+    type = TetroType(randomType);
+    src = typeInfo[type];
+}
+
+void Tetromino::update() {
+    Entity* playfield = owner->manager.getEntityByName("Playfield");
+    Transform* playfieldTransform = playfield->getComponent<Transform>();
+
+    Appearance* appearance = owner->getComponent<Appearance>();
+    Transform* transform = owner->getComponent<Transform>();
+
+    transform->position.x = playfieldTransform->position.x + 1 + colIndex;
+    transform->position.y = playfieldTransform->position.y -19 + rowIndex;
+
+    appearance->setSrc(src.x + direction * src.w, src.y, src.w, src.h);
+    Collider* collider = owner->getComponent<Collider>();
+    collider->changeCollider(src.x + direction * src.w, src.y, src.w, src.h);
+}
+
+void Tetromino::render() {}
+
+
+
+

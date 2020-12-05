@@ -3,6 +3,8 @@
 
 #include "types.hpp"
 
+using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
 class Config;
 class Graphics;
 class Command;
@@ -23,6 +25,9 @@ class Game {
     InputManager* event;
     EntityManager* manager;
 
+    Time time_a;
+    Time time_b;
+
 public:
     bool tick = false;
 
@@ -33,8 +38,14 @@ public:
     
     void init();
 
+    void createTetro();
+
     void update();
     void render();
+
+    double getDeltaTime() const;
+
+    void setPause();
 
     Graphics* getGFX() const;
     InputManager* getEvent() const;

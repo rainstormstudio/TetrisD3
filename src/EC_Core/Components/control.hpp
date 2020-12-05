@@ -5,16 +5,15 @@
 
 class Control : public Component {
 public:
-    unsigned int speed;
-
     Control();
-    Control(unsigned int speed);
 
     void init() override {}
 
     void update() override;
 
     void render() override {}
+
+    ~Control() override {}
 };
 
 #endif
