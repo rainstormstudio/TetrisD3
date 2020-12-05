@@ -1,12 +1,28 @@
 #include "panel.hpp"
 #include "transform.hpp"
+#include "gravity.hpp"
+#include "gamefield.hpp"
 #include "../../media.hpp"
 #include "../../texture.hpp"
 #include "../../debug.hpp"
 
+#include <iomanip>
+#include <sstream>
+
 std::string Panel::prefix(int value, int width, char ch) {
     std::string result = "";
     result = std::to_string(value);
+    int len = result.length();
+    for (int i = 0; i < width - len; i ++) {
+        result = ch + result;
+    }
+    return result;
+}
+
+std::string Panel::doubleToString(double value, int width, char ch) {
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(1) << value;
+    std::string result = ss.str() + "Ln/s";
     int len = result.length();
     for (int i = 0; i < width - len; i ++) {
         result = ch + result;
@@ -31,6 +47,9 @@ void Panel::addlines(int num) {
     lines += num;
     if (lines >= 10) {
         level ++;
+        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+        GameField* playfield = gamefield->getComponent<GameField>();
+        playfield->setSpeed(playfield->getSpeed() * 1.1);
         lines = lines % 10;
     }
 }
@@ -63,6 +82,10 @@ void Panel::render() {
     gfx->write(prefix(score, 6, ' '), transform->position.x + 17, transform->position.y + 14);
     gfx->write(prefix(level, 6, ' '), transform->position.x + 17, transform->position.y + 16);
     gfx->write(prefix(totallines, 6, ' '), transform->position.x + 17, transform->position.y + 18);
+    Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    GameField* playfield = gamefield->getComponent<GameField>();
+    std::string speed = doubleToString(playfield->getSpeed(), 8, ' ');
+    gfx->write(speed, transform->position.x + 17, transform->position.y + 7);
     for (int i = 9 - lines; i < 9; i ++) {
         for (int j = 0; j < 2; j ++) {
             CPixel* info = new CPixel(bar[i]);

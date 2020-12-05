@@ -24,6 +24,7 @@ class GameField : public Component {
     double clearProcess;
     Entity* currentTetro;
     Entity* nextTetro;
+    double speed;
 
 public:
     GameField(int preoccupiedrows);
@@ -37,6 +38,14 @@ public:
     void clearlines();
 
     void droplines();
+
+    double getSpeed() const {
+        return speed;
+    }
+
+    void setSpeed(double value) {
+        speed = value;
+    }
 
     void init() override;
 

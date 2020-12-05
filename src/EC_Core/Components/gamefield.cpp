@@ -21,6 +21,7 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     clearCol = 0;
     currentTetro = nullptr;
     nextTetro = nullptr;
+    speed = 1.0;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -107,10 +108,10 @@ void GameField::init() {
         }
     }
 
-    currentTetro = owner->game->createTetro();
+    currentTetro = owner->game->createTetro(1.0);
     Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
     tetromino->setHold(true);
-    nextTetro = owner->game->createTetro();
+    nextTetro = owner->game->createTetro(1.0);
 }
 
 void GameField::update() {
@@ -121,7 +122,7 @@ void GameField::update() {
             currentTetro = nextTetro;
             Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
             tetromino->setHold(true);
-            nextTetro = owner->game->createTetro();
+            nextTetro = owner->game->createTetro(speed);
         }
         checklines();
         if (lines.empty()) {

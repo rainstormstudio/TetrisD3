@@ -44,7 +44,7 @@ public:
     
     void init();
 
-    Entity* createTetro();
+    Entity* createTetro(double speed);
     
     void update();
     void render();

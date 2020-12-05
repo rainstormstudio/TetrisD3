@@ -31,14 +31,14 @@ Game::~Game() {
 
 bool Game::loop() const { return state != NO_GAME; }
 
-Entity* Game::createTetro() {
+Entity* Game::createTetro(double speed) {
     Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
         tetro->addComponent<Transform>();
         tetro->addComponent<Tetromino>();
         tetro->addComponent<Appearance>("./assets/txt/tetrominoes.txt");
         tetro->addComponent<Control>();
         tetro->addComponent<Collider>();
-        tetro->addComponent<Gravity>(1);
+        tetro->addComponent<Gravity>(speed);
     }
     return tetro;
 }

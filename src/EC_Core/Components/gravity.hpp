@@ -17,6 +17,14 @@ public:
 
     void init() override {}
 
+    void setSpeed(double value) {
+        speed = value;
+    }
+
+    double getSpeed() const {
+        return speed;
+    }
+
     void update() override {
         double deltatime = owner->game->getDeltaTime();
         Debug::msg("deltatime = " + std::to_string(deltatime), 1);

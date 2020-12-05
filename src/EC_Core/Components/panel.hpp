@@ -21,6 +21,8 @@ class Panel : public Component {
     int lines;
 
     std::string prefix(int value, int width, char ch);
+
+    std::string doubleToString(double value, int width, char ch);
 public:
     Panel();
 
