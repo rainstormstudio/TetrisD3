@@ -62,7 +62,8 @@ void Game::init() {
     Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
         gameField->addComponent<GameField>(0);
         gameField->addComponent<Transform>(12, 4);
-        gameField->addComponent<Music>("./assets/audio/theme.wav");
+        if (!cfg->mute_music)
+            gameField->addComponent<Music>("./assets/audio/theme.wav");
     }
 
     Entity* interface = manager->addEntity("Interface", Layer::UI); {
@@ -170,10 +171,12 @@ void Game::setPause() {
 }
 
 void Game::triggerClearSFX() {
+    if (cfg->mute_sfx) return;
     Mix_PlayChannel(-1, clearSFX, 0);
 }
 
 void Game::triggerFallSFX() {
+    if (cfg->mute_sfx) return;
     Mix_PlayChannel(-1, fallSFX, 0);
 }
 

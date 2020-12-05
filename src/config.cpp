@@ -20,6 +20,8 @@ Config::Config(std::string filename) {
     fontPath = "./assets/fonts/Monaco.ttf";
     screenWidth = 800;
     screenHeight = 600;
+    mute_music = false;
+    mute_sfx = false;
     input = std::vector<std::string>(TOTAL_INPUTTYPES);
     input[MOVEUP] = "W";
     input[MOVEDOWN] = "S";
@@ -67,6 +69,14 @@ Config::Config(std::string filename) {
                 screenWidth = std::stoi(value);
             } else if (tag == "SCREENHEIGHT" && Math::isNat(value)) {
                 screenHeight = std::stoi(value);
+            } else if (tag == "MUTE_MUSIC") {
+                if (value == "TRUE") {
+                    mute_music = true;
+                }
+            } else if (tag == "MUTE_SFX") {
+                if (value == "TRUE") {
+                    mute_sfx = true;
+                }
             } else if (tag == "UP") {
                 input[MOVEUP] = value;
             } else if (tag == "DOWN") {

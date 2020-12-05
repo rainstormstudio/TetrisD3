@@ -5,6 +5,10 @@ TILESET=./assets/tilesets/Curses_square_24.png
 SCREENWIDTH=800
 SCREENHEIGHT=600
 
+# sound settings
+MUTE_MUSIC=FALSE
+MUTE_SFX=FALSE
+
 # key configs
 # uses SDL key names
 
