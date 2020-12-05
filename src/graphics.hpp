@@ -239,6 +239,16 @@ public:
     void drawTexture(const Texture* texture, const SDL_Rect &src, const SDL_Rect &dest);
 
     /**
+     * @brief draws the src content from Texture to dest on buffer with alpha ratio
+     * 
+     * @param texture txt texture
+     * @param src src rectangle content in Texture
+     * @param dest dest on buffer
+     * @param ratio alpha ratio
+     */
+    void drawTexture(const Texture* texture, const SDL_Rect &src, const SDL_Rect &dest, double ratio);
+
+    /**
      * @brief clear the screen buffer and textDisplay
      * 
      */

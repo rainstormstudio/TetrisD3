@@ -10,9 +10,6 @@ Entity::Entity(Game* game, EntityManager& manager)
 }
 
 Entity::~Entity() {
-    Debug::enabled = true;
-    Debug::msg("delete entity's components");
-    Debug::enabled = false;
     for (auto& component : components) {
         delete component;
     }

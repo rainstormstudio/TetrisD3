@@ -16,6 +16,7 @@ class Tetromino : public Component {
     };
     int direction;
     SDL_Rect src;
+    SDL_Rect target;
     int rowIndex;
     int colIndex;
     bool hold;
@@ -47,6 +48,8 @@ public:
     void moveLeft();
 
     void moveDown();
+
+    void harddrop();
 
     void init() override;
 

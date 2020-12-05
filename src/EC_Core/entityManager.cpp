@@ -5,7 +5,6 @@ EntityManager::EntityManager(Game* game)
     : game{game} {}
 
 EntityManager::~EntityManager() {
-    Debug::msg("delete manager");
     for (auto& entity : entities) {
         delete entity;
     }

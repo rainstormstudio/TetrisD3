@@ -123,6 +123,18 @@ void GameField::update() {
             nextTetro = owner->game->createTetro();
         }
         checklines();
+        if (lines.empty()) {
+            bool lost = false;
+            for (int i = 0; i < cols; i ++) {
+                if (playfield[19][i].occupied) {
+                    lost = true;
+                    break;
+                }
+            }
+            if (lost) {
+                owner->game->state = END_GAME;
+            }
+        }
     } else {
         clearlines();
     }

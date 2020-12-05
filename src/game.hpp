@@ -16,11 +16,11 @@ enum GameState {
     NO_GAME,
     MENU,
     IN_GAME,
-    PAUSE_MENU
+    PAUSE_MENU,
+    END_GAME
 };
 
 class Game {
-    GameState state;
     Config* cfg;
     Graphics* gfx;
     InputManager* event;
@@ -30,6 +30,7 @@ class Game {
     Time time_b;
 
 public:
+    GameState state;
     bool tick = false;
 
     Game();
@@ -40,7 +41,7 @@ public:
     void init();
 
     Entity* createTetro();
-
+    
     void update();
     void render();
 

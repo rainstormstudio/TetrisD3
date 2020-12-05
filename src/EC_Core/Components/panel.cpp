@@ -1,6 +1,7 @@
 #include "panel.hpp"
 #include "transform.hpp"
 #include "../../graphics.hpp"
+#include "../../texture.hpp"
 #include "../../debug.hpp"
 
 std::string Panel::prefix(int value, int width, char ch) {
@@ -14,21 +15,19 @@ std::string Panel::prefix(int value, int width, char ch) {
 }
 
 Panel::Panel() {
-    start_time = std::chrono::high_resolution_clock::now();
     score = 0;
     level = 0;
+    totallines = 0;
     lines = 0;
+    timepassed = 0;
 }
 
 void Panel::init() {
-    start_time = std::chrono::high_resolution_clock::now();
-    score = 0;
-    level = 0;
-    lines = 0;
 }
 
 void Panel::addlines(int num) {
     score += points[num] * (level + 1);
+    totallines += num;
     lines += num;
     if (lines >= 10) {
         level ++;
@@ -37,13 +36,23 @@ void Panel::addlines(int num) {
 }
 
 void Panel::update() {
-    current_time = std::chrono::high_resolution_clock::now();
+    timepassed += owner->game->getDeltaTime();
 }
 
 void Panel::render() {
+    std::vector<CPixel> bar = {
+        CPixel{0, 0, 0, 0, 0, 255, 51, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 255, 92, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 255, 133, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 255, 174, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 255, 115, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 254, 255, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 213, 255, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 172, 255, 51, 255},
+        CPixel{0, 0, 0, 0, 0, 131, 255, 51, 255}
+    };
     Transform* transform = owner->getComponent<Transform>();
     Graphics* gfx = owner->game->getGFX();
-    double timepassed = std::chrono::duration_cast<std::chrono::microseconds>(current_time - start_time).count() / 1000000.0f;
     int hours = timepassed / 3600.0;
     timepassed -= hours * 3600.0;
     int minutes = timepassed / 60.0;
@@ -53,5 +62,12 @@ void Panel::render() {
     gfx->write(time, transform->position.x + 17, transform->position.y + 10);
     gfx->write(prefix(score, 6, ' '), transform->position.x + 17, transform->position.y + 14);
     gfx->write(prefix(level, 6, ' '), transform->position.x + 17, transform->position.y + 16);
-    gfx->write(prefix(lines, 6, ' '), transform->position.x + 17, transform->position.y + 18);
+    gfx->write(prefix(totallines, 6, ' '), transform->position.x + 17, transform->position.y + 18);
+    for (int i = 9 - lines; i < 9; i ++) {
+        for (int j = 0; j < 2; j ++) {
+            CPixel* info = new CPixel(bar[i]);
+            gfx->drawPoint(info, transform->position.x + j + 3, transform->position.y + i + 12);
+            delete info;
+        }
+    }
 }

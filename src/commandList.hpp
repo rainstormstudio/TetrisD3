@@ -6,6 +6,7 @@
 #include "./Commands/movedown.hpp"
 #include "./Commands/rotateright.hpp"
 #include "./Commands/rotateleft.hpp"
+#include "./Commands/harddrop.hpp"
 #include "./Commands/pause.hpp"
 
 #endif

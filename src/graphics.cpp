@@ -231,6 +231,25 @@ void Graphics::drawTexture(const Texture* texture, const SDL_Rect &src, const SD
     }
 }
 
+void Graphics::drawTexture(const Texture* texture, const SDL_Rect &src, const SDL_Rect &dest, double ratio) {
+    if (texture) {
+        for (int i = src.x; i < src.x + src.w; i ++) {
+            for (int j = src.y; j < src.y + src.h; j ++) {
+                CPixel* info = texture->getInfo(i, j);
+                CPixel* transparent = new CPixel();
+                if (*info != *transparent) {
+                    int x = i - src.x + dest.x;
+                    int y = j - src.y + dest.y;
+                    setCh(info->ch, x, y);
+                    setForeColor(info->r, info->g, info->b, static_cast<Uint8>(info->a * ratio), x, y);
+                    setBackColor(info->br, info->bg, info->bb, static_cast<Uint8>(info->ba * ratio), x, y);
+                }
+                delete transparent;
+            }
+        }
+    }
+}
+
 Graphics::~Graphics() {
     if (tileset != nullptr) {
         SDL_DestroyTexture(tileset);

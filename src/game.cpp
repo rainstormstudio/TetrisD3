@@ -88,6 +88,8 @@ void Game::update() {
             Debug::msg("update MAP done");
             if (event->input[QUIT]) {
                 state = NO_GAME;
+            } else if (event->input[PAUSE]) {
+                setPause();
             }
             break;
         }
@@ -98,6 +100,11 @@ void Game::update() {
             } else if (event->input[PAUSE]) {
                 setPause();
             }
+            break;
+        }
+        case END_GAME: {
+            // TODO: restart menu, etc
+            state = NO_GAME;
             break;
         }
     }
@@ -128,6 +135,9 @@ void Game::render() {
             gfx->clear();
             manager->render();
             gfx->render();
+            break;
+        }
+        case END_GAME: {
             break;
         }
     }

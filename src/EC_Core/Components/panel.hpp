@@ -2,7 +2,8 @@
 #define PANEL_HPP
 
 #include "../entityManager.hpp"
-#include <chrono>
+
+struct CPixel;
 
 class Panel : public Component {
     const std::vector<int> points = {
@@ -13,10 +14,10 @@ class Panel : public Component {
         1200
     };
 
-    std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
-    std::chrono::time_point<std::chrono::high_resolution_clock> current_time;
+    double timepassed;
     int score;
     int level;
+    int totallines;
     int lines;
 
     std::string prefix(int value, int width, char ch);

@@ -12,6 +12,7 @@ Tetromino::Tetromino() {
     direction = 0;
     type = TETRO_I;
     src = {0, 0, 0, 0};
+    target = {0, 0, 0, 0};
     rowIndex = 19;
     colIndex = 4;
     hold = false;
@@ -76,6 +77,12 @@ void Tetromino::moveDown() {
         owner->destroy();
 }
 
+void Tetromino::harddrop() {
+    if (!hold) return;
+    rowIndex = target.y;
+    owner->destroy();
+}
+
 void Tetromino::init() {
     int randomType = Math::randint(0, 6);
     Debug::msg(std::to_string(randomType), 1);
@@ -97,6 +104,11 @@ void Tetromino::update() {
         appearance->setSrc(src.x + direction * src.w, src.y, src.w, src.h);
         Collider* collider = owner->getComponent<Collider>();
         collider->changeCollider(src.x + direction * src.w, src.y, src.w, src.h);
+
+        target = {colIndex, rowIndex, src.w, src.h};
+        while (!collider->willCollide(target.y + 1, target.x, src.x + direction * src.w, src.y, src.w, src.h)) {
+            target.y ++;
+        }
     }
 }
 
@@ -108,6 +120,9 @@ void Tetromino::render() {
     Appearance* appearance = owner->getComponent<Appearance>();
     Texture* texture = appearance->getTexture();
     if (hold) {
+        Entity* playfield = owner->manager.getEntityByName("Playfield");
+        Transform* playfieldTransform = playfield->getComponent<Transform>();
+
         SDL_Rect tsrc = {src.x + direction * src.w, src.y, src.w, src.h};
         SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 1)), 
                             static_cast<int>(round(interfaceTransform->position.y + 2)), 
@@ -115,6 +130,9 @@ void Tetromino::render() {
         if (src.w == 3) tdest.x ++;
         if (src.h == 3) tdest.y ++;
         gfx->drawTexture(texture, tsrc, tdest);
+        tdest.x = target.x + playfieldTransform->position.x + 1;
+        tdest.y = target.y + playfieldTransform->position.y -19;
+        gfx->drawTexture(texture, tsrc, tdest, 0.3);
     } else {
         SDL_Rect tsrc = {src.x + direction * src.w, src.y, src.w, src.h};
         SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 17)), 

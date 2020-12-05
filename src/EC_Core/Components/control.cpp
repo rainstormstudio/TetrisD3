@@ -26,7 +26,7 @@ Control::Control() {}
         } else if (event->input[MOVEDOWN]) {
             owner->game->executeCommand(std::make_shared<MoveDown>(owner));
             owner->game->tick = true;
-        } else if (event->input[PAUSE]) {
-            owner->game->executeCommand(std::make_shared<Pause>(owner));
+        } else if (event->input[DROP]) {
+            owner->game->executeCommand(std::make_shared<HardDrop>(owner));
         }
     }
