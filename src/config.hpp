@@ -10,6 +10,15 @@ class Config {
 public:
     std::string tilesetPath;
     std::string fontPath;
+    std::string UIPath;
+    std::string musicPath;
+    std::string rotateSFXPath;
+    std::string softdropSFXPath;
+    std::string harddropSFXPath;
+    std::string clearsingleSFXPath;
+    std::string cleardoubleSFXPath;
+    std::string cleartripleSFXPath;
+    std::string cleartetrisSFXPath;
     unsigned int screenWidth;
     unsigned int screenHeight;
     bool mute_music;

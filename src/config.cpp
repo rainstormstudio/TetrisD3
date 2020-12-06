@@ -16,10 +16,19 @@ std::string Config::trim(std::string str) {
 
 Config::Config(std::string filename) {
     // defaults
-    tilesetPath = "./assets/tilesets/Vintl01.png";
+    tilesetPath = "./assets/tilesets/Curses_square_24.png";
     fontPath = "./assets/fonts/Monaco.ttf";
-    screenWidth = 800;
-    screenHeight = 600;
+    UIPath = "./assets/txt/UI.txt";
+    musicPath = "./assets/audio/theme.wav";
+    rotateSFXPath = "./assets/audio/tetris99/line.wav";
+    softdropSFXPath = "./assets/audio/tetris99/line.wav";
+    harddropSFXPath = "./assets/audio/fall.wav";
+    clearsingleSFXPath = "./assets/audio/clear.wav";
+    cleardoubleSFXPath = "./assets/audio/clear.wav";
+    cleartripleSFXPath = "./assets/audio/clear.wav";
+    cleartetrisSFXPath = "./assets/audio/clear.wav";
+    screenWidth = 1280;
+    screenHeight = 720;
     mute_music = false;
     mute_sfx = false;
     input = std::vector<std::string>(TOTAL_INPUTTYPES);
@@ -65,6 +74,24 @@ Config::Config(std::string filename) {
                 tilesetPath = value;
             } else if (tag == "FONT") {
                 fontPath = value;
+            } else if (tag == "UI") {
+                UIPath = value;
+            } else if (tag == "MUSIC") {
+                musicPath = value;
+            } else if (tag == "ROTATE_SFX") {
+                rotateSFXPath = value;
+            } else if (tag == "SOFTDROP_SFX") {
+                softdropSFXPath = value;
+            } else if (tag == "HARDDROP_SFX") {
+                harddropSFXPath = value;
+            } else if (tag == "CLEARSINGLE_SFX") {
+                clearsingleSFXPath = value;
+            } else if (tag == "CLEARDOUBLE_SFX") {
+                cleardoubleSFXPath = value;
+            } else if (tag == "CLEARTRIPLE_SFX") {
+                cleartripleSFXPath = value;
+            } else if (tag == "CLEARTETRIS_SFX") {
+                cleartetrisSFXPath = value;
             } else if (tag == "SCREENWIDTH" && Math::isNat(value)) {
                 screenWidth = std::stoi(value);
             } else if (tag == "SCREENHEIGHT" && Math::isNat(value)) {

@@ -53,9 +53,6 @@ public:
 
     void setPause();
 
-    void triggerClearSFX();
-    void triggerFallSFX();
-
     Media* getGFX() const;
     InputManager* getEvent() const;
     Config* getCFG() const;

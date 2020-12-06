@@ -1,9 +1,22 @@
 # tileset
-TILESET=./assets/tilesets/Curses_square_24.png
+TILESET=./assets/tilesets/16x16_isenhertz_v2.png
+
+# UI
+UI=./assets/txt/UI.txt
+
+# sound
+MUSIC=./assets/audio/tetris99/theme.wav
+ROTATE_SFX=./assets/audio/tetris99/rotate.wav
+SOFTDROP_SFX=./assets/audio/tetris99/softdrop.wav
+HARDDROP_SFX=./assets/audio/tetris99/harddrop.wav
+CLEARSINGLE_SFX=./assets/audio/tetris99/single.wav
+CLEARDOUBLE_SFX=./assets/audio/tetris99/double.wav
+CLEARTRIPLE_SFX=./assets/audio/tetris99/triple.wav
+CLEARTETRIS_SFX=./assets/audio/tetris99/tetris.wav
 
 # window info
-SCREENWIDTH=800
-SCREENHEIGHT=600
+#SCREENWIDTH=800
+#SCREENHEIGHT=600
 
 # sound settings
 MUTE_MUSIC=FALSE
@@ -19,5 +32,5 @@ RIGHT=D
 ROTATE_RIGHT=W
 ROTATE_LEFT=Q
 DROP=Space
-PAUSE=Return
+PAUSE=Escape
 CONFIRM=Return

@@ -3,6 +3,7 @@
 #include "appearance.hpp"
 #include "collider.hpp"
 #include "gamefield.hpp"
+#include "soundeffects.hpp"
 #include "../../debug.hpp"
 #include "../../math.hpp"
 #include "../../texture.hpp"
@@ -42,16 +43,24 @@ void Tetromino::rotateRight() {
     if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     int temp = (direction + 1) % 4;
-    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
+    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h)) {
         direction = temp;
+        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+        SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+        sfx->triggerRotate();
+    }
 }
 
 void Tetromino::rotateLeft() {
     if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
     int temp = (direction + 3) % 4;
-    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h))
+    if (!collider->willCollide(rowIndex, colIndex, src.x + temp * src.w, src.y, src.w, src.h)) {
         direction = temp;
+        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+        SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+        sfx->triggerRotate();
+    }
 }
 
 void Tetromino::moveRight() {
@@ -64,23 +73,29 @@ void Tetromino::moveRight() {
 void Tetromino::moveLeft() {
     if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
-    if (!collider->willCollide(rowIndex, colIndex - 1, src.x + direction * src.w, src.y, src.w, src.h))
+    if (!collider->willCollide(rowIndex, colIndex - 1, src.x + direction * src.w, src.y, src.w, src.h)) 
         colIndex --;
 }
 
 void Tetromino::moveDown() {
     if (!hold) return;
     Collider* collider = owner->getComponent<Collider>();
-    if (!collider->willCollide(rowIndex + 1, colIndex, src.x + direction * src.w, src.y, src.w, src.h))
+    if (!collider->willCollide(rowIndex + 1, colIndex, src.x + direction * src.w, src.y, src.w, src.h)) {
         rowIndex ++;
-    else 
+        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+        SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+        sfx->triggerSoftDrop();
+    } else {
         owner->destroy();
+    }
 }
 
 void Tetromino::harddrop() {
     if (!hold) return;
     rowIndex = target.y;
-    owner->game->triggerFallSFX();
+    Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+    sfx->triggerHardDrop();
     owner->destroy();
 }
 

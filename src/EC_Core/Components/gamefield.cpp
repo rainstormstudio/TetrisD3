@@ -2,6 +2,7 @@
 #include "tetromino.hpp"
 #include "transform.hpp"
 #include "panel.hpp"
+#include "soundeffects.hpp"
 #include "../../game.hpp"
 #include "../../EC_Core/entityManager.hpp"
 #include "../../texture.hpp"
@@ -65,7 +66,17 @@ void GameField::checklines() {
     }
     if (!lines.empty()) {
         clearCol = cols;
-        owner->game->triggerClearSFX();
+        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+        SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+        if (lines.size() == 1) {
+            sfx->triggerSingle();
+        } else if (lines.size() == 2) {
+            sfx->triggerDouble();
+        } else if (lines.size() == 3) {
+            sfx->triggerTriple();
+        } else if (lines.size() == 4) {
+            sfx->triggerTetris();
+        }
     }
 }
 

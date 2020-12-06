@@ -44,7 +44,7 @@ Entity* Game::createTetro(double speed) {
 }
 
 void Game::init() {
-    Debug::enabled = true;
+    Debug::enabled = false;
     Debug::msg("Game::init start");
     cfg = new Config("./config/config.txt");
     Debug::msg("cfg constructed", 1);
@@ -54,21 +54,25 @@ void Game::init() {
     Debug::msg("event constructed", 1);
     manager = new EntityManager(this);
     Debug::msg("manager constructed", 1);
-    clearSFX = Mix_LoadWAV("./assets/audio/clear.wav");
-    if (!clearSFX) std::cerr << "Failed to load sound effect: SDL_mixer Error: " << Mix_GetError() << std::endl;
-    fallSFX = Mix_LoadWAV("./assets/audio/fall.wav");
-    if (!fallSFX) std::cerr << "Failed to load sound effect: SDL_mixer Error: " << Mix_GetError() << std::endl;
 
     Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
         gameField->addComponent<GameField>(0);
-        gameField->addComponent<Transform>(12, 4);
-        if (!cfg->mute_music)
-            gameField->addComponent<Music>("./assets/audio/theme.wav");
+        gameField->addComponent<Transform>(12, 2);
+        gameField->addComponent<Music>(cfg->musicPath);
+        gameField->addComponent<SoundEffects>(
+            cfg->rotateSFXPath,
+            cfg->softdropSFXPath,
+            cfg->harddropSFXPath,
+            cfg->clearsingleSFXPath,
+            cfg->cleardoubleSFXPath,
+            cfg->cleartripleSFXPath,
+            cfg->cleartetrisSFXPath
+        );
     }
 
     Entity* interface = manager->addEntity("Interface", Layer::UI); {
-        interface->addComponent<Transform>(7, 4);
-        interface->addComponent<Appearance>("./assets/txt/UI.txt", 0, 0, 26, 22);
+        interface->addComponent<Transform>(7, 2);
+        interface->addComponent<Appearance>(cfg->UIPath, 0, 0, 26, 22);
         interface->addComponent<Panel>();
     }
 
@@ -168,16 +172,6 @@ void Game::setPause() {
     } else if (state == PAUSE_MENU) {
         state = IN_GAME;
     }
-}
-
-void Game::triggerClearSFX() {
-    if (cfg->mute_sfx) return;
-    Mix_PlayChannel(-1, clearSFX, 0);
-}
-
-void Game::triggerFallSFX() {
-    if (cfg->mute_sfx) return;
-    Mix_PlayChannel(-1, fallSFX, 0);
 }
 
 Media* Game::getGFX() const { return gfx; }
