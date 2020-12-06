@@ -20,6 +20,10 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     clearSpeed = 30.0;
     clearProcess = 0.0;
     clearCol = 0;
+    airflow = 0.0;
+    airflowprocess = 0.0;
+    airspeed = 50.0;
+    air = {0, 0, 3, 4};
     currentTetro = nullptr;
     nextTetro = nullptr;
     speed = 1.0;
@@ -65,7 +69,7 @@ void GameField::checklines() {
         }
     }
     if (!lines.empty()) {
-        clearCol = cols;
+        clearCol = cols / 2;
         Entity* gamefield = owner->manager.getEntityByName("Playfield");
         SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
         if (lines.size() == 1) {
@@ -93,6 +97,7 @@ void GameField::clearlines() {
             int row = lines[j];
             int col = clearCol;
             playfield[row][col] = {false, ' ', 0, 0, 0, 255, 0, 0, 0, 255};
+            playfield[row][cols - col - 1] = {false, ' ', 0, 0, 0, 255, 0, 0, 0, 255};
         }
         clearProcess = 0.0;
     }
@@ -112,6 +117,13 @@ void GameField::droplines() {
     lines.clear();
 }
 
+void GameField::triggerAirflow(int row, int col, int width) {
+    air.x = col;
+    air.y = row - 3;
+    air.w = width;
+    airflow = 1.0;
+}
+
 void GameField::init() {
     for (int i = 0; i < preoccupiedrows; i ++) {
         for (int j = 0; j < cols; j ++) {
@@ -126,6 +138,15 @@ void GameField::init() {
 }
 
 void GameField::update() {
+    double deltatime = owner->game->getDeltaTime();
+    if (airflow > 0.0) {
+        airflowprocess += airspeed * deltatime;
+        if (airflowprocess > 1.0) {
+            air.y --;
+            airflowprocess = 0.0;
+            airflow -= 0.1;
+        }
+    }
     if (lines.empty()) {
         owner->manager.updateByLayer(Layer::OBJECTS);
         std::vector<Entity*> tetros = owner->manager.getEntitiesByLayer(Layer::OBJECTS);
@@ -176,4 +197,27 @@ void GameField::render() {
             delete cell;
         }
     }
+    Debug::enabled = true;
+    if (airflow > 0.0) {
+        Debug::msg("airflow=" + std::to_string(airflow), 1);
+        Debug::msg(std::to_string(transform->position.x + air.x + 1), 2);
+        Debug::msg(std::to_string(transform->position.y + air.y - rows + 21), 2);
+        Debug::line(2);
+        for (int i = 0; i < air.h; i ++) {
+            for (int j = 0; j < air.w; j ++) {
+                CPixel* cell = new CPixel{
+                    0,
+                    0, 0, 0, 255,
+                    255, 255, 255, static_cast<Uint8>(200 * airflow)
+                };
+                gfx->drawPoint(cell, 
+                    round(j + transform->position.x + air.x + 1),
+                    round(i - rows + 21 + transform->position.y + air.y));
+                Debug::msg("drew", 2);
+                delete cell;
+            }
+        }
+        Debug::line(1);
+    }
+    Debug::enabled = false;
 }

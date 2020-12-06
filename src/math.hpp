@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <algorithm>
 
 namespace Math {
     void initRandom();

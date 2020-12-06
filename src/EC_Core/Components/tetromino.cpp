@@ -96,17 +96,22 @@ void Tetromino::harddrop() {
     Entity* gamefield = owner->manager.getEntityByName("Playfield");
     SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
     sfx->triggerHardDrop();
+    GameField* playfield = gamefield->getComponent<GameField>();
+    playfield->triggerAirflow(
+        rowIndex + typeOffsets[type][direction * 3 + 1], 
+        colIndex + typeOffsets[type][direction * 3 + 0], 
+        typeOffsets[type][direction * 3 + 2]);
     owner->destroy();
 }
 
 void Tetromino::init() {
-    static TetroType lasttype = TETRO_I;
-    int randomType = Math::randint(0, 7);
-    if (randomType == 7 || static_cast<TetroType>(randomType) == lasttype) {
-        randomType = Math::randint(0, 6);
+    static std::vector<TetroType> bag = {};
+    if (bag.empty()) {
+        bag = {TETRO_I, TETRO_J, TETRO_L, TETRO_S, TETRO_T, TETRO_Z};
+        std::random_shuffle(bag.begin(), bag.end());
     }
-    type = TetroType(randomType);
-    lasttype = type;
+    type = TetroType(bag.back());
+    bag.pop_back();
     src = typeInfo[type];
 }
 

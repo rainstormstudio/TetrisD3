@@ -18,10 +18,17 @@ class GameField : public Component {
 
     int preoccupiedrows;
     std::vector<std::vector<Cell>> playfield;
+
     std::vector<int> lines;
     int clearCol;
     double clearSpeed;
     double clearProcess;
+
+    double airflow;
+    double airflowprocess;
+    double airspeed;
+    SDL_Rect air;
+
     Entity* currentTetro;
     Entity* nextTetro;
     double speed;
@@ -38,6 +45,8 @@ public:
     void clearlines();
 
     void droplines();
+
+    void triggerAirflow(int row, int col, int width);
 
     double getSpeed() const {
         return speed;
