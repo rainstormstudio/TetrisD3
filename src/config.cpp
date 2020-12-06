@@ -20,8 +20,8 @@ Config::Config(std::string filename) {
     fontPath = "./assets/fonts/Monaco.ttf";
     UIPath = "./assets/txt/UI.txt";
     musicPath = "./assets/audio/theme.wav";
-    rotateSFXPath = "./assets/audio/tetris99/line.wav";
-    softdropSFXPath = "./assets/audio/tetris99/line.wav";
+    rotateSFXPath = "./assets/audio/line.wav";
+    softdropSFXPath = "";
     harddropSFXPath = "./assets/audio/fall.wav";
     clearsingleSFXPath = "./assets/audio/clear.wav";
     cleardoubleSFXPath = "./assets/audio/clear.wav";

@@ -100,9 +100,13 @@ void Tetromino::harddrop() {
 }
 
 void Tetromino::init() {
-    int randomType = Math::randint(0, 6);
-    Debug::msg(std::to_string(randomType), 1);
+    static TetroType lasttype = TETRO_I;
+    int randomType = Math::randint(0, 7);
+    if (randomType == 7 || static_cast<TetroType>(randomType) == lasttype) {
+        randomType = Math::randint(0, 6);
+    }
     type = TetroType(randomType);
+    lasttype = type;
     src = typeInfo[type];
 }
 

@@ -1,5 +1,5 @@
 # tileset
-TILESET=./assets/tilesets/16x16_isenhertz_v2.png
+TILESET=./assets/tilesets/Curses_square_24.png
 
 # UI
 UI=./assets/txt/UI.txt
