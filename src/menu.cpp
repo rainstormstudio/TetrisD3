@@ -5,6 +5,7 @@
 #include "media.hpp"
 #include "config.hpp"
 #include "debug.hpp"
+#include "math.hpp"
 
 Menu::Menu(Game* game, std::string texturefile, std::string moveSFXfile, SDL_Rect src, SDL_Rect dest) 
     : game{game}, src{src}, dest{dest} {
@@ -12,7 +13,8 @@ Menu::Menu(Game* game, std::string texturefile, std::string moveSFXfile, SDL_Rec
     move_sfx = Mix_LoadWAV(moveSFXfile.c_str());
     if (!move_sfx) std::cerr << "Failed to load sound effect: " << moveSFXfile << Mix_GetError();
     option = 0;
-    optionCol = dest.x + 4;
+    optionCol = 0;
+    prev_state = TITLE;
     state = TITLE;
     countdown = 0;
     process = 0.0;
@@ -28,7 +30,7 @@ Menu::~Menu() {
 
 void Menu::reset() {
     option = 0;
-    optionCol = dest.x + 4;
+    optionCol = 0;
     state = MENU;
     process = 0.0;
     highlight = false;
@@ -45,8 +47,15 @@ void Menu::choose() {
                     game->createLevel();
                     break;
                 }
+                case 2: {   // setting
+                    reset();
+                    prev_state = MENU;
+                    state = SETTINGS;
+                    break;
+                }
                 case 3: {   // quit game
                     game->state = NO_GAME;
+                    break;
                 }
             }
             break;
@@ -54,7 +63,7 @@ void Menu::choose() {
         case PAUSE_MENU: {
             switch (option) {
                 case 0: {   // resume
-                reset();
+                    reset();
                     game->setPause();
                     break;
                 }
@@ -62,6 +71,12 @@ void Menu::choose() {
                     reset();
                     game->endLevel();
                     game->createLevel();
+                    break;
+                }
+                case 2: {   // settings
+                    reset();
+                    prev_state = PAUSE_MENU;
+                    state = SETTINGS;
                     break;
                 }
                 case 3: {   // main menu
@@ -77,6 +92,15 @@ void Menu::choose() {
                 }
             }
             break;
+        }
+        case SETTINGS: {
+            switch (option) {
+                case 5: {   // back
+                    reset();
+                    state = prev_state;
+                    break;
+                }
+            }
         }
     }
     
@@ -94,14 +118,48 @@ void Menu::moveOption(int delta) {
             option = (option + 4 + delta) % 4;
             triggerMoveSFX();
             process = 0.0;
-            optionCol = dest.x + 4;
+            optionCol = 0;
             break;
         }
         case PAUSE_MENU: {
             option = (option + 5 + delta) % 5;
             triggerMoveSFX();
             process = 0.0;
-            optionCol = dest.x + 4;
+            optionCol = 0;
+            break;
+        }
+        case SETTINGS: {
+            option = (option + 6 + delta) % 6;
+            triggerMoveSFX();
+            process = 0.0;
+            optionCol = 0;
+            break;
+        }
+    }
+}
+
+void Menu::changeSettings(int delta) {
+    Config* cfg = game->getCFG();
+    switch (option) {
+        case 0: {   // mute music
+            cfg->mute_music = !cfg->mute_music;
+            break;
+        }
+        case 1: {   // mute sfx
+            cfg->mute_sfx = !cfg->mute_sfx;
+            break;
+        }
+        case 2: {   // music volume
+            cfg->music_volume += delta;
+            cfg->music_volume = Math::max(cfg->music_volume, 0);
+            cfg->music_volume = Math::min(cfg->music_volume, 128);
+            break;
+        }
+        case 3: {   // sfx volume
+            cfg->sfx_volume += delta;
+            cfg->sfx_volume = Math::max(cfg->sfx_volume, 0);
+            cfg->sfx_volume = Math::min(cfg->sfx_volume, 128);
+            break;
         }
     }
 }
@@ -140,8 +198,8 @@ void Menu::update() {
             process += deltatime * 70.0;
             if (process > 1.0) {
                 optionCol ++;
-                if (optionCol > dest.x + 18) {
-                    optionCol = dest.x + 18;
+                if (optionCol > 14) {
+                    optionCol = 14;
                 }
                 process = 0.0;
             }
@@ -164,8 +222,8 @@ void Menu::update() {
             process += deltatime * 70.0;
             if (process > 1.0) {
                 optionCol ++;
-                if (optionCol > dest.x + 18) {
-                    optionCol = dest.x + 18;
+                if (optionCol > 14) {
+                    optionCol = 14;
                 }
                 process = 0.0;
             }
@@ -181,6 +239,33 @@ void Menu::update() {
             } else if (event->input[PAUSE]) {
                 reset();
                 game->setPause();
+            }
+            break;
+        }
+        case SETTINGS: {
+            process += deltatime * 70.0;
+            if (process > 1.0) {
+                optionCol ++;
+                if (optionCol > 14) {
+                    optionCol = 14;
+                }
+                process = 0.0;
+            }
+            if (event->input[MOVEUP]) {
+                moveOption(-1);
+            } else if (event->input[MOVEDOWN]) {
+                moveOption(+1);
+            } else if (event->input[MOVELEFT]) {
+                changeSettings(-1);
+            } else if (event->input[MOVERIGHT]) {
+                changeSettings(+1);
+            } else if (event->input[CONFIRM] && (option == 4 || option == 5)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->input[PAUSE]) {
+                state = prev_state;
             }
             break;
         }
@@ -207,10 +292,10 @@ void Menu::render() {
             gfx->write("QUIT GAME", dest.x + 4, dest.y + 18, 255, 255, 255, 200);
 
             gfx->write(">", dest.x + 2, dest.y + 12 + option * 2, 0, 128, 255, 255);
-            for (int i = dest.x + 4; i < optionCol; i ++) {
+            for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
                 gfx->setBackColor(
                     0, 128, 255, 
-                    round(255.0 * ((15.0 - i - dest.x - 4) / 15.0)), 
+                    round(200.0 * ((optionCol - i + dest.x + 4) / 14.0)), 
                     i, dest.y + 12 + option * 2);
             }
             if (clicked) {
@@ -236,10 +321,10 @@ void Menu::render() {
             gfx->write("QUIT GAME", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
 
             gfx->write(">", dest.x + 2, dest.y + 6 + option * 2, 0, 128, 255, 255);
-            for (int i = dest.x + 4; i < optionCol; i ++) {
+            for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
                 gfx->setBackColor(
                     0, 128, 255, 
-                    round(255.0 * ((15.0 - i - dest.x - 4) / 15.0)), 
+                    round(200.0 * ((optionCol - i + dest.x + 4) / 14.0)), 
                     i, dest.y + 6 + option * 2);
             }
             if (clicked) {
@@ -250,6 +335,49 @@ void Menu::render() {
                 } else {
                     for (int i = 0; i < 10; i ++) {
                         gfx->setBackColor(0, 0, 0, 255, dest.x + i + 4, dest.y + 6 + option * 2);
+                    }
+                }
+            }
+            break;
+        }
+        case SETTINGS: {
+            Config* cfg = game->getCFG();
+            gfx->write("SETTINGS", dest.x, dest.y, 255, 255, 255, 255);
+            gfx->write("----------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            gfx->write("MUTE MUSIC", dest.x + 2, dest.y + 4, 255, 255, 255, 200);
+            if (cfg->mute_music) {
+                gfx->write("ON", dest.x + 14, dest.y + 4, 0, 255, 0, 255);
+            } else {
+                gfx->write("OFF", dest.x + 14, dest.y + 4, 255, 0, 0, 255);
+            }
+            gfx->write("MUTE SFX", dest.x + 2, dest.y + 6, 255, 255, 255, 200);
+            if (cfg->mute_sfx) {
+                gfx->write("ON", dest.x + 14, dest.y + 6, 0, 255, 0, 255);
+            } else {
+                gfx->write("OFF", dest.x + 14, dest.y + 6, 255, 0, 0, 255);
+            }
+            gfx->write("MUSIC VOLUME", dest.x + 2, dest.y + 8, 255, 255, 255, 200);
+            gfx->write(Math::format(cfg->music_volume, 3, ' '), dest.x + 14, dest.y + 8, 255, 255, 0, 255);
+            gfx->write("SFX VOLUME", dest.x + 2, dest.y + 10, 255, 255, 255, 200);
+            gfx->write(Math::format(cfg->sfx_volume, 3, ' '), dest.x + 14, dest.y + 10, 255, 255, 0, 255);
+            gfx->write("SAVE TO CONFIG", dest.x + 2, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("BACK", dest.x + 2, dest.y + 14, 255, 255, 255, 200);
+
+            gfx->write(">", dest.x, dest.y + 4 + option * 2, 0, 128, 255, 255);
+            for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
+                gfx->setBackColor(
+                    0, 128, 255, 
+                    round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
+                    i, dest.y + 4 + option * 2);
+            }
+            if (clicked) {
+                if (highlight) {
+                    for (int i = 0; i < 10; i ++) {
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 4 + option * 2);
+                    }
+                } else {
+                    for (int i = 0; i < 10; i ++) {
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 4 + option * 2);
                     }
                 }
             }

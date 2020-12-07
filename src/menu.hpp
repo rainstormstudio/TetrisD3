@@ -9,6 +9,15 @@ class Game;
 
 
 class Menu {
+public:
+    enum MenuState {
+        TITLE,
+        MENU,
+        PAUSE_MENU,
+        SETTINGS
+    };
+    MenuState state;
+private:
     Texture* titleTexture;
     Mix_Chunk* move_sfx;
     Game* game;
@@ -21,13 +30,9 @@ class Menu {
     double process;
     bool highlight;
     bool clicked;
+
+    MenuState prev_state;
 public:
-    enum MenuState {
-        TITLE,
-        MENU,
-        PAUSE_MENU
-    };
-    MenuState state;
 
     Menu(Game* game, std::string texturefile, std::string moveSFXfile, SDL_Rect src, SDL_Rect dest);
 
@@ -40,6 +45,8 @@ public:
     void triggerMoveSFX();
 
     void moveOption(int delta);
+
+    void changeSettings(int delta);
 
     void update();
 

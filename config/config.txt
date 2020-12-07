@@ -21,9 +21,9 @@ CLEARTETRIS_SFX=./assets/audio/tetris99/tetris.wav
 # music settings
 # volume range: 0 - 128
 MUTE_MUSIC=FALSE
-MUSIC_VOLUME=10
+MUSIC_VOLUME=100
 MUTE_SFX=FALSE
-SFX_VOLUME=10
+SFX_VOLUME=100
 
 # key configs
 # uses SDL key names

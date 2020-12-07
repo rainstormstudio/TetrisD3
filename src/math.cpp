@@ -18,3 +18,20 @@ bool Math::isNat(std::string str) {
     }
     return true;
 }
+
+std::string Math::format(int value, int width, char ch) {
+    std::string ans = std::to_string(value);
+    int len = ans.length();
+    for (int i = 0; i < width - len; i ++) {
+        ans = ch + ans;
+    }
+    return ans;
+}
+
+int Math::max(int a, int b) {
+    return std::max(a, b);
+}
+
+int Math::min(int a, int b) {
+    return std::min(a, b);
+}

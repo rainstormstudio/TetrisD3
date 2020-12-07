@@ -145,7 +145,6 @@ void Game::update() {
         }
         case PAUSE_MENU: {
             event->update();
-            menu->state = Menu::PAUSE_MENU;
             menu->update();
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -210,6 +209,7 @@ void Game::setPause() {
     music->pauseMusic();
     if (state == IN_GAME) {
         state = PAUSE_MENU;
+        menu->state = Menu::PAUSE_MENU;
     } else if (state == PAUSE_MENU) {
         state = IN_GAME;
     }

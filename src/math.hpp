@@ -12,6 +12,12 @@ namespace Math {
     int randint(int min, int max);
 
     bool isNat(std::string str);
+
+    std::string format(int value, int width, char ch);
+
+    int max(int a, int b);
+
+    int min(int a, int b);
 }
 
 #endif
