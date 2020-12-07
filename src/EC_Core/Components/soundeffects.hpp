@@ -38,6 +38,23 @@ public:
         if (!tetris_sfx) std::cerr << "Failed to load sound effect: " << tetris_filename << Mix_GetError() << std::endl;
     }
 
+    ~SoundEffects() {
+        Mix_FreeChunk(rotate_sfx);
+        rotate_sfx = nullptr;
+        Mix_FreeChunk(softdrop_sfx);
+        softdrop_sfx = nullptr;
+        Mix_FreeChunk(harddrop_sfx);
+        harddrop_sfx = nullptr;
+        Mix_FreeChunk(single_sfx);
+        single_sfx = nullptr;
+        Mix_FreeChunk(double_sfx);
+        double_sfx = nullptr;
+        Mix_FreeChunk(triple_sfx);
+        triple_sfx = nullptr;
+        Mix_FreeChunk(tetris_sfx);
+        tetris_sfx = nullptr;
+    }
+
     void triggerRotate();
 
     void triggerSoftDrop();

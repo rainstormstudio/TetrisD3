@@ -12,6 +12,7 @@ class InputManager;
 class EntityManager;
 class Entity;
 class Mix_Chunk;
+class Menu;
 
 enum GameState {
     NO_GAME,
@@ -26,6 +27,8 @@ class Game {
     Media* gfx;
     InputManager* event;
     EntityManager* manager;
+
+    Menu* menu;
 
     Time time_a;
     Time time_b;
@@ -45,6 +48,10 @@ public:
     void init();
 
     Entity* createTetro(double speed);
+    
+    void createLevel();
+
+    void endLevel();
     
     void update();
     void render();

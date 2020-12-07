@@ -10,6 +10,7 @@ class Config {
 public:
     std::string tilesetPath;
     std::string fontPath;
+    std::string titlePath;
     std::string UIPath;
     std::string musicPath;
     std::string rotateSFXPath;

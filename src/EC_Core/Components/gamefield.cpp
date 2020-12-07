@@ -197,12 +197,7 @@ void GameField::render() {
             delete cell;
         }
     }
-    Debug::enabled = true;
     if (airflow > 0.0) {
-        Debug::msg("airflow=" + std::to_string(airflow), 1);
-        Debug::msg(std::to_string(transform->position.x + air.x + 1), 2);
-        Debug::msg(std::to_string(transform->position.y + air.y - rows + 21), 2);
-        Debug::line(2);
         for (int i = 0; i < air.h; i ++) {
             for (int j = 0; j < air.w; j ++) {
                 CPixel* cell = new CPixel{
@@ -213,11 +208,8 @@ void GameField::render() {
                 gfx->drawPoint(cell, 
                     round(j + transform->position.x + air.x + 1),
                     round(i - rows + 21 + transform->position.y + air.y));
-                Debug::msg("drew", 2);
                 delete cell;
             }
         }
-        Debug::line(1);
     }
-    Debug::enabled = false;
 }

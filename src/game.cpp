@@ -5,6 +5,7 @@
 #include "inputManager.hpp"
 #include "math.hpp"
 #include "command.hpp"
+#include "menu.hpp"
 #include "./EC_Core/entityManager.hpp"
 #include "./EC_Core/entity.hpp"
 #include "./EC_Core/componentList.hpp"
@@ -15,14 +16,17 @@ Game::Game() {
     gfx = nullptr;
     event = nullptr;
     manager = nullptr;
+    menu = nullptr;
     Math::initRandom();
 }
 
 Game::~Game() {
+    manager->destroy();
     Mix_FreeChunk(clearSFX);
     Mix_FreeChunk(fallSFX);
     clearSFX = nullptr;
     fallSFX = nullptr;
+    delete menu;
     delete manager;
     delete event;
     delete gfx;
@@ -31,30 +35,9 @@ Game::~Game() {
 
 bool Game::loop() const { return state != NO_GAME; }
 
-Entity* Game::createTetro(double speed) {
-    Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
-        tetro->addComponent<Transform>();
-        tetro->addComponent<Tetromino>();
-        tetro->addComponent<Appearance>("./assets/txt/tetrominoes.txt");
-        tetro->addComponent<Control>();
-        tetro->addComponent<Collider>();
-        tetro->addComponent<Gravity>(speed);
-    }
-    return tetro;
-}
-
-void Game::init() {
-    Debug::enabled = false;
-    Debug::msg("Game::init start");
-    cfg = new Config("./config/config.txt");
-    Debug::msg("cfg constructed", 1);
-    gfx = new Media("Line of Fire", cfg->tilesetPath, 16, 16, 0, cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
-    Debug::msg("gfx constructed", 1);
-    event = new InputManager(cfg);
-    Debug::msg("event constructed", 1);
+void Game::createLevel() {
     manager = new EntityManager(this);
     Debug::msg("manager constructed", 1);
-
     Entity* gameField = manager->addEntity("Playfield", Layer::MAP); {
         gameField->addComponent<GameField>(0);
         gameField->addComponent<Transform>(12, 2);
@@ -77,10 +60,48 @@ void Game::init() {
     }
 
     state = IN_GAME;
+
+    time_a = std::chrono::high_resolution_clock::now();
+}
+
+Entity* Game::createTetro(double speed) {
+    Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
+        tetro->addComponent<Transform>();
+        tetro->addComponent<Tetromino>();
+        tetro->addComponent<Appearance>("./assets/txt/tetrominoes.txt");
+        tetro->addComponent<Control>();
+        tetro->addComponent<Collider>();
+        tetro->addComponent<Gravity>(speed);
+    }
+    return tetro;
+}
+
+void Game::endLevel() {
+    Debug::enabled = true;
+    Debug::msg("start destroying manager");
+    manager->destroy();
+    delete manager;
+    Debug::msg("end destroying manager");
+    Debug::line();
+    state = MENU;
+    Debug::msg("endLevel done");
+}
+
+void Game::init() {
+    Debug::enabled = false;
+    Debug::msg("Game::init start");
+    cfg = new Config("./config/config.txt");
+    Debug::msg("cfg constructed", 1);
+    gfx = new Media("Line of Fire", cfg->tilesetPath, 16, 16, 0, cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
+    Debug::msg("gfx constructed", 1);
+    event = new InputManager(cfg);
+    Debug::msg("event constructed", 1);
+    menu = new Menu(this, cfg->titlePath, cfg->softdropSFXPath, {0, 0, 17, 10}, {12, 4, 17, 10});
+    
     Debug::msg("Game::init done");
     Debug::line();
 
-    time_a = std::chrono::high_resolution_clock::now();
+    state = MENU;
 }
 
 void Game::update() {
@@ -92,6 +113,18 @@ void Game::update() {
             break;
         }
         case MENU: {
+            Debug::enabled = true;
+            Debug::msg("updating event", 1);
+            event->update();
+            Debug::msg("updated event", 1);
+            Debug::msg("updating menu", 1);
+            menu->update();
+            Debug::msg("updated event", 1);
+
+            if (event->input[QUIT]) {
+                state = NO_GAME;
+            }
+            Debug::enabled = false;
             break;
         }
         case IN_GAME: {
@@ -109,10 +142,10 @@ void Game::update() {
         }
         case PAUSE_MENU: {
             event->update();
+            menu->state = Menu::PAUSE_MENU;
+            menu->update();
             if (event->input[QUIT]) {
                 state = NO_GAME;
-            } else if (event->input[PAUSE]) {
-                setPause();
             }
             break;
         }
@@ -128,13 +161,15 @@ void Game::update() {
 }
 
 void Game::render() {
-    Debug::enabled = false;
     Debug::msg("Game::render start");
     switch (state) {
         case NO_GAME: {
             break;
         }
         case MENU: {
+            gfx->clear();
+            menu->render();
+            gfx->render();
             break;
         }
         case IN_GAME: {
@@ -148,6 +183,8 @@ void Game::render() {
         case PAUSE_MENU: {
             gfx->clear();
             manager->render();
+            gfx->addFilter(0.3);
+            menu->render();
             gfx->render();
             break;
         }

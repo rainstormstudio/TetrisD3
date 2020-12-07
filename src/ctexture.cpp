@@ -38,6 +38,14 @@ void CTexture::setBackColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
     backColor = {red, green, blue, alpha};
 }
 
+SDL_Color CTexture::getForeColor() const {
+    return foreColor;
+}
+
+SDL_Color CTexture::getBackColor() const {
+    return backColor;
+}
+
 void CTexture::setBlendMode(SDL_BlendMode blending) {
     SDL_SetTextureBlendMode(texture, blending);
 }

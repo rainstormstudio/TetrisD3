@@ -106,6 +106,24 @@ public:
     void setBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y);
 
     /**
+     * @brief Get the Fore Color 
+     * 
+     * @param x the column number
+     * @param y the row number
+     * @return SDL_Color 
+     */
+    SDL_Color getForeColor(int x, int y) const;
+
+    /**
+     * @brief Get the Back Color
+     * 
+     * @param x the column number
+     * @param y the row number
+     * @return SDL_Color 
+     */
+    SDL_Color getBackColor(int x, int y) const;
+
+    /**
      * @brief import txt file to the screen; if transparent is true, 
      * the spaces in txt file will not replace the original content
      * (ignoring spaces)
@@ -248,6 +266,13 @@ public:
      * @param ratio alpha ratio
      */
     void drawTexture(const Texture* texture, const SDL_Rect &src, const SDL_Rect &dest, double ratio);
+
+    /**
+     * @brief add a layer of filter on the current buffer
+     * 
+     * @param ratio ratio of alpha
+     */
+    void addFilter(double ratio);
 
     /**
      * @brief clear the screen buffer and textDisplay

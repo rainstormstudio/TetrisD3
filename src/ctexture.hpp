@@ -94,6 +94,20 @@ public:
     void setBackColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha);
 
     /**
+     * @brief Get the Fore Color 
+     * 
+     * @return SDL_Color 
+     */
+    SDL_Color getForeColor() const;
+
+    /**
+     * @brief Get the Back Color
+     * 
+     * @return SDL_Color 
+     */
+    SDL_Color getBackColor() const;
+
+    /**
      * @brief Set the SDL Blend Mode
      * 
      * @param blending SDL Blend Mode

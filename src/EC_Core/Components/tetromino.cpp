@@ -21,6 +21,7 @@ Tetromino::Tetromino() {
 
 Tetromino::~Tetromino() {
     Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    if (!gamefield) return;
     GameField* playfield = gamefield->getComponent<GameField>();
 
     Appearance* appearance = owner->getComponent<Appearance>();

@@ -18,6 +18,7 @@ Config::Config(std::string filename) {
     // defaults
     tilesetPath = "./assets/tilesets/Curses_square_24.png";
     fontPath = "./assets/fonts/Monaco.ttf";
+    titlePath = "./assets/txt/title.txt";
     UIPath = "./assets/txt/UI.txt";
     musicPath = "./assets/audio/theme.wav";
     rotateSFXPath = "./assets/audio/line.wav";
@@ -74,6 +75,8 @@ Config::Config(std::string filename) {
                 tilesetPath = value;
             } else if (tag == "FONT") {
                 fontPath = value;
+            } else if (tag == "TITLE") {
+                titlePath = value;
             } else if (tag == "UI") {
                 UIPath = value;
             } else if (tag == "MUSIC") {

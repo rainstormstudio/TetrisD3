@@ -5,17 +5,19 @@ EntityManager::EntityManager(Game* game)
     : game{game} {}
 
 EntityManager::~EntityManager() {
-    for (auto& entity : entities) {
-        delete entity;
-    }
+    destroy();
 }
 
 void EntityManager::destroy() {
+    Debug::msg("destroy entitymanager", 1);
     for (unsigned int i = 0; i < entities.size(); ++i) {
+        Debug::msg("destory entity", 2);
         delete entities[i];
         entities.erase(entities.begin() + i);
         --i;
+        Debug::msg("one entity destroyed", 2);
     }
+    Debug::msg("destroy entitymanager end", 1);
 }
 
 void EntityManager::destroyByLayer(Layer::Type layer) {

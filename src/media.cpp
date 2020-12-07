@@ -86,6 +86,22 @@ void Media::setBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y) {
     }
 }
 
+SDL_Color Media::getForeColor(int x, int y) const {
+    if (x < numCols && y < numRows) {
+        return textDisplay[y][x]->getForeColor();
+    } else {
+        return {};
+    }
+}
+
+SDL_Color Media::getBackColor(int x, int y) const {
+    if (x < numCols && y < numRows) {
+        return textDisplay[y][x]->getBackColor();
+    } else {
+        return {};
+    }
+}
+
 void Media::drawPoint(CPixel* cpixel, int x, int y) {
     setCh(cpixel->ch, x, y);
     setForeColor(cpixel->r, cpixel->g, cpixel->b, cpixel->a, x, y);
@@ -249,6 +265,17 @@ void Media::drawTexture(const Texture* texture, const SDL_Rect &src, const SDL_R
                 }
                 delete transparent;
             }
+        }
+    }
+}
+
+void Media::addFilter(double ratio) {
+    for (int i = 0; i < numRows; i ++) {
+        for (int j = 0; j < numCols; j ++) {
+            SDL_Color foreColor = getForeColor(j, i);
+            SDL_Color backColor = getBackColor(j, i);
+            setForeColor(foreColor.r, foreColor.g, foreColor.b, foreColor.a * ratio, j, i);
+            setBackColor(backColor.r, backColor.g, backColor.b, backColor.a * ratio, j, i);
         }
     }
 }

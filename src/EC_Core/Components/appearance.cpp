@@ -59,7 +59,11 @@ void Appearance::render() {
 }
 
 Appearance::~Appearance() {
+    Debug::msg("delete appearance", 5);
     delete texture;
+    texture = nullptr;
     delete cpixel;
+    cpixel = nullptr;
+    Debug::msg("deleted appearance", 5);
 }
 
