@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "debug.hpp"
 #include "config.hpp"
+#include "saves.hpp"
 #include "media.hpp"
 #include "inputManager.hpp"
 #include "math.hpp"
@@ -13,6 +14,7 @@
 Game::Game() {
     state = NO_GAME;
     cfg = nullptr;
+    saves = nullptr;
     gfx = nullptr;
     event = nullptr;
     manager = nullptr;
@@ -31,6 +33,7 @@ Game::~Game() {
     delete manager;
     delete event;
     delete gfx;
+    delete saves;
     delete cfg;
 }
 
@@ -50,7 +53,9 @@ void Game::createLevel() {
             cfg->clearsingleSFXPath,
             cfg->cleardoubleSFXPath,
             cfg->cleartripleSFXPath,
-            cfg->cleartetrisSFXPath
+            cfg->cleartetrisSFXPath,
+            cfg->levelupSFXPath,
+            cfg->gameoverSFXPath
         );
     }
 
@@ -69,7 +74,7 @@ Entity* Game::createTetro(double speed) {
     Entity* tetro = manager->addEntity("tetro", Layer::OBJECTS); {
         tetro->addComponent<Transform>();
         tetro->addComponent<Tetromino>();
-        tetro->addComponent<Appearance>("./assets/txt/tetrominoes.txt");
+        tetro->addComponent<Appearance>(cfg->tetroPath);
         tetro->addComponent<Control>();
         tetro->addComponent<Collider>();
         tetro->addComponent<Gravity>(speed);
@@ -91,11 +96,13 @@ void Game::endLevel() {
 }
 
 void Game::init() {
-    Debug::enabled = false;
+    Debug::enabled = true;
     Debug::msg("Game::init start");
     cfg = new Config("./config/config.txt");
     Debug::msg("cfg constructed", 1);
-    gfx = new Media("Line of Fire", cfg->tilesetPath, 16, 16, 0, cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
+    saves = new Saves(cfg->savePath);
+    Debug::msg("saves constructed", 1);
+    gfx = new Media("TetrisD3", cfg->tilesetPath, 16, 16, cfg->getFullscreenFlag(), cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
     Debug::msg("gfx constructed", 1);
     event = new InputManager(cfg);
     Debug::msg("event constructed", 1);
@@ -152,8 +159,11 @@ void Game::update() {
             break;
         }
         case END_GAME: {
-            // TODO: restart menu, etc
-            state = NO_GAME;
+            event->update();
+            menu->update();
+            if (event->input[QUIT]) {
+                state = NO_GAME;
+            }
             break;
         }
     }
@@ -192,6 +202,9 @@ void Game::render() {
             break;
         }
         case END_GAME: {
+            gfx->clear();
+            menu->render();
+            gfx->render();
             break;
         }
     }
@@ -219,7 +232,13 @@ Media* Game::getGFX() const { return gfx; }
 
 InputManager* Game::getEvent() const { return event; }
 
+EntityManager* Game::getEntityManager() const { return manager; }
+
+Menu* Game::getMenu() const { return menu; }
+
 Config* Game::getCFG() const { return cfg; }
+
+Saves* Game::getSaves() const { return saves; }
 
 void Game::executeCommand(std::shared_ptr<Command> command) {
     command->execute();

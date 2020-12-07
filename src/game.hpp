@@ -6,6 +6,7 @@
 using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 class Config;
+class Saves;
 class Media;
 class Command;
 class InputManager;
@@ -23,6 +24,7 @@ enum GameState {
 };
 
 class Game {
+    Saves* saves;
     Config* cfg;
     Media* gfx;
     InputManager* event;
@@ -62,7 +64,10 @@ public:
 
     Media* getGFX() const;
     InputManager* getEvent() const;
+    EntityManager* getEntityManager() const;
+    Menu* getMenu() const;
     Config* getCFG() const;
+    Saves* getSaves() const;
 
     void executeCommand(std::shared_ptr<Command> command);
 };

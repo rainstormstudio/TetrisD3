@@ -7,14 +7,15 @@
 class Texture;
 class Game;
 
-
 class Menu {
 public:
     enum MenuState {
         TITLE,
         MENU,
         PAUSE_MENU,
-        SETTINGS
+        SETTINGS,
+        SCORES,
+        END_GAME
     };
     MenuState state;
 private:

@@ -28,6 +28,15 @@ std::string Math::format(int value, int width, char ch) {
     return ans;
 }
 
+std::string Math::format(std::string value, int width, char ch) {
+    std::string ans = value;
+    int len = ans.length();
+    for (int i = 0; i < width - len; i ++) {
+        ans = ch + ans;
+    }
+    return ans;
+}
+
 int Math::max(int a, int b) {
     return std::max(a, b);
 }

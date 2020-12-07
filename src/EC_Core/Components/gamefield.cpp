@@ -2,8 +2,11 @@
 #include "tetromino.hpp"
 #include "transform.hpp"
 #include "panel.hpp"
+#include "music.hpp"
 #include "soundeffects.hpp"
 #include "../../game.hpp"
+#include "../../saves.hpp"
+#include "../../menu.hpp"
 #include "../../EC_Core/entityManager.hpp"
 #include "../../texture.hpp"
 #include "../../media.hpp"
@@ -29,6 +32,7 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     speed = 1.0;
     levelup = 0;
     levelupprocess = 0.0;
+    lost = false;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -129,6 +133,9 @@ void GameField::triggerAirflow(int row, int col, int width) {
 void GameField::triggerLevelup() {
     levelup = 10;
     levelupprocess = 0.0;
+    Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+    sfx->triggerLevelup();
 }
 
 void GameField::init() {
@@ -145,46 +152,77 @@ void GameField::init() {
 }
 
 void GameField::update() {
-    double deltatime = owner->game->getDeltaTime();
-    if (airflow > 0.0) {
-        airflowprocess += airspeed * deltatime;
-        if (airflowprocess > 1.0) {
-            air.y --;
-            airflowprocess = 0.0;
-            airflow -= 0.1;
-        }
-    }
-    if (levelup > 0) {
-        levelupprocess += 10.0 * deltatime;
-        if (levelupprocess > 1.0) {
-            levelup --;
-            levelupprocess = 0.0;
-        }
-    }
-    if (lines.empty()) {
-        owner->manager.updateByLayer(Layer::OBJECTS);
-        std::vector<Entity*> tetros = owner->manager.getEntitiesByLayer(Layer::OBJECTS);
-        if (tetros.size() < 2) {
-            currentTetro = nextTetro;
-            Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
-            tetromino->setHold(true);
-            nextTetro = owner->game->createTetro(speed);
-        }
-        checklines();
-        if (lines.empty()) {
-            bool lost = false;
-            for (int i = 0; i < cols; i ++) {
-                if (playfield[19][i].occupied) {
-                    lost = true;
-                    break;
-                }
+    if (lost) {
+        double deltatime = owner->game->getDeltaTime();
+        if (airflow > 0.0) {
+            airflowprocess += 10.0 * deltatime;
+            if (airflowprocess > 1.0) {
+                air.y --;
+                airflowprocess = 0.0;
+                airflow -= 0.06;
             }
-            if (lost) {
-                owner->game->state = END_GAME;
-            }
+        }
+        if (airflow <= 0.0) {
+            owner->game->state = END_GAME;
+            owner->game->getMenu()->reset();
+            owner->game->getMenu()->state = Menu::MenuState::END_GAME;
+            Entity* interface = owner->manager.getEntityByName("Interface");
+            Panel* panel = interface->getComponent<Panel>();
+            Saves* saves = owner->game->getSaves();
+            saves->addScore(panel->getScore());
+            saves->saveToFile();
         }
     } else {
-        clearlines();
+        double deltatime = owner->game->getDeltaTime();
+        if (airflow > 0.0) {
+            airflowprocess += airspeed * deltatime;
+            if (airflowprocess > 1.0) {
+                air.y --;
+                airflowprocess = 0.0;
+                airflow -= 0.1;
+            }
+        }
+        if (levelup > 0) {
+            levelupprocess += 10.0 * deltatime;
+            if (levelupprocess > 1.0) {
+                levelup --;
+                levelupprocess = 0.0;
+            }
+        }
+        if (lines.empty()) {
+            owner->manager.updateByLayer(Layer::OBJECTS);
+            std::vector<Entity*> tetros = owner->manager.getEntitiesByLayer(Layer::OBJECTS);
+            if (tetros.size() < 2) {
+                currentTetro = nextTetro;
+                Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
+                tetromino->setHold(true);
+                nextTetro = owner->game->createTetro(speed);
+            }
+            checklines();
+            if (lines.empty()) {
+                for (int i = 0; i < cols; i ++) {
+                    if (playfield[19][i].occupied) {
+                        lost = true;
+                        clearField();
+                        if (currentTetro) {
+                            currentTetro->destroy();
+                        }
+                        if (nextTetro) {
+                            nextTetro->destroy();
+                        }
+                        Music* music = owner->getComponent<Music>();
+                        music->stopMusic();
+                        Entity* gamefield = owner->manager.getEntityByName("Playfield");
+                        SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+                        sfx->triggerGameover();
+                        triggerAirflow(rows - 1, 0, 10);
+                        break;
+                    }
+                }
+            }
+        } else {
+            clearlines();
+        }
     }
 }
 
@@ -242,6 +280,14 @@ void GameField::render() {
             gfx->write("VE", transform->position.x - 2, transform->position.y + 8, 255, 255, 255, 255, 255, 0, 0, 255);
             gfx->write("L ", transform->position.x - 2, transform->position.y + 9, 255, 255, 255, 255, 255, 128, 0, 255);
             gfx->write("UP", transform->position.x - 2, transform->position.y + 10, 255, 255, 255, 255, 255, 255, 0, 255);
+        }
+    }
+}
+
+void GameField::clearField() {
+    for (int i = 0; i < rows; i ++) {
+        for (int j = 0; j < cols; j ++) {
+            playfield[i][j] = {false, ' ', 0, 0, 0, 255, 0, 0, 0, 255};
         }
     }
 }

@@ -6,12 +6,24 @@
 #include "inputManager.hpp"
 
 class Config {
+    std::string configFilePath;
+
+    std::string comment(std::string content);
+    std::string item(std::string tag, std::string value);
+    std::string item(std::string tag, unsigned int value);
+    std::string item(std::string tag, bool value);
+    
     std::string trim(std::string str);
+
+    bool fullscreen;
+    Uint32 fullscreenFlag;
 public:
+    std::string savePath;
     std::string tilesetPath;
     std::string fontPath;
     std::string titlePath;
     std::string UIPath;
+    std::string tetroPath;
     std::string musicPath;
     std::string rotateSFXPath;
     std::string softdropSFXPath;
@@ -20,6 +32,8 @@ public:
     std::string cleardoubleSFXPath;
     std::string cleartripleSFXPath;
     std::string cleartetrisSFXPath;
+    std::string levelupSFXPath;
+    std::string gameoverSFXPath;
     unsigned int screenWidth;
     unsigned int screenHeight;
 
@@ -30,6 +44,12 @@ public:
     std::vector<std::string> input;
 
     Config(std::string filename);
+    
+    void setFullscreen(bool value);
+    bool isFullscreen() const;
+    Uint32 getFullscreenFlag() const;
+
+    void saveToFile();
 };
 
 #endif

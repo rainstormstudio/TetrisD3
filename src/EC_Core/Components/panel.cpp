@@ -73,13 +73,8 @@ void Panel::render() {
     };
     Transform* transform = owner->getComponent<Transform>();
     Media* gfx = owner->game->getGFX();
-    double temp = timepassed;
-    int hours = temp / 3600.0;
-    temp -= hours * 3600.0;
-    int minutes = temp / 60.0;
-    temp -= minutes * 60.0;
-    int seconds = temp;
-    std::string time = prefix(hours, 2, '0') + ":" + prefix(minutes, 2, '0') + ":" + prefix(seconds, 2, '0');
+    std::vector<int> times = getTime();
+    std::string time = prefix(times[0], 2, '0') + ":" + prefix(times[1], 2, '0') + ":" + prefix(times[2], 2, '0');
     gfx->write(time, transform->position.x + 17, transform->position.y + 10);
     gfx->write(prefix(score, 6, ' '), transform->position.x + 17, transform->position.y + 14);
     gfx->write(prefix(level, 6, ' '), transform->position.x + 17, transform->position.y + 16);
@@ -95,4 +90,18 @@ void Panel::render() {
             delete info;
         }
     }
+}
+
+std::vector<int> Panel::getTime() {
+    double temp = timepassed;
+    int hours = temp / 3600.0;
+    temp -= hours * 3600.0;
+    int minutes = temp / 60.0;
+    temp -= minutes * 60.0;
+    int seconds = temp;
+    std::vector<int> time(3, 0);
+    time[0] = hours;
+    time[1] = minutes;
+    time[2] = seconds;
+    return time;
 }

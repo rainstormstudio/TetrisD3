@@ -15,6 +15,8 @@ namespace Math {
 
     std::string format(int value, int width, char ch);
 
+    std::string format(std::string value, int width, char ch);
+
     int max(int a, int b);
 
     int min(int a, int b);

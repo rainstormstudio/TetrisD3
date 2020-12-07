@@ -15,6 +15,8 @@ public:
 
     void pauseMusic();
 
+    void stopMusic();
+
     void update() override;
     
     void render() override {}

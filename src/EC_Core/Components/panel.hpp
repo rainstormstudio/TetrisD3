@@ -30,6 +30,10 @@ public:
 
     void addlines(int num);
 
+    int getScore() const { return score; }
+
+    std::vector<int> getTime();
+
     void update() override;
 
     void render() override;

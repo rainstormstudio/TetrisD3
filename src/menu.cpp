@@ -4,8 +4,11 @@
 #include "texture.hpp"
 #include "media.hpp"
 #include "config.hpp"
+#include "saves.hpp"
 #include "debug.hpp"
 #include "math.hpp"
+#include "./EC_Core/entityManager.hpp"
+#include "./EC_Core/Components/panel.hpp"
 
 Menu::Menu(Game* game, std::string texturefile, std::string moveSFXfile, SDL_Rect src, SDL_Rect dest) 
     : game{game}, src{src}, dest{dest} {
@@ -45,6 +48,12 @@ void Menu::choose() {
                     reset();
                     game->state = IN_GAME;
                     game->createLevel();
+                    break;
+                }
+                case 1: {   // top scores
+                    reset();
+                    prev_state = MENU;
+                    state = SCORES;
                     break;
                 }
                 case 2: {   // setting
@@ -95,12 +104,59 @@ void Menu::choose() {
         }
         case SETTINGS: {
             switch (option) {
+                case 4: {   // save settings to config file
+                    Config* cfg = game->getCFG();
+                    cfg->saveToFile();
+                    option = 0;
+                    optionCol = 0;
+                    process = 0.0;
+                    highlight = false;
+                    clicked = false;
+                    break;
+                }
                 case 5: {   // back
                     reset();
                     state = prev_state;
                     break;
                 }
             }
+            break;
+        }
+        case SCORES: {
+            switch (option) {
+                case 0: {   // back
+                    reset();
+                    state = prev_state;
+                    break;
+                }
+            }
+            break;
+        }
+        case END_GAME: {
+            switch (option) {
+                case 0: {   // restart
+                    reset();
+                    game->endLevel();
+                    game->createLevel();
+                    break;
+                }
+                case 1: {   // current scores
+                    reset();
+                    prev_state = END_GAME;
+                    state = SCORES;
+                    break;
+                }
+                case 2: {   // main menu
+                    reset();
+                    game->endLevel();
+                    break;
+                }
+                case 3: {   // quit game
+                    game->state = NO_GAME;
+                    break;
+                }
+            }
+            break;
         }
     }
     
@@ -130,6 +186,13 @@ void Menu::moveOption(int delta) {
         }
         case SETTINGS: {
             option = (option + 6 + delta) % 6;
+            triggerMoveSFX();
+            process = 0.0;
+            optionCol = 0;
+            break;
+        }
+        case END_GAME: {
+            option = (option + 4 + delta) % 4;
             triggerMoveSFX();
             process = 0.0;
             optionCol = 0;
@@ -269,6 +332,46 @@ void Menu::update() {
             }
             break;
         }
+        case SCORES: {
+            process += deltatime * 70.0;
+            if (process > 1.0) {
+                optionCol ++;
+                if (optionCol > 14) {
+                    optionCol = 14;
+                }
+                process = 0.0;
+            }
+            if (event->input[CONFIRM] && (option == 0)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->input[PAUSE]) {
+                state = prev_state;
+            }
+            break;
+        }
+        case END_GAME: {
+            process += deltatime * 70.0;
+            if (process > 1.0) {
+                optionCol ++;
+                if (optionCol > 14) {
+                    optionCol = 14;
+                }
+                process = 0.0;
+            }
+            if (event->input[MOVEUP]) {
+                moveOption(-1);
+            } else if (event->input[MOVEDOWN]) {
+                moveOption(+1);
+            } else if (event->input[CONFIRM]) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            }
+            break;
+        }
     }
 }
 
@@ -372,15 +475,80 @@ void Menu::render() {
             }
             if (clicked) {
                 if (highlight) {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 16; i ++) {
                         gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 4 + option * 2);
                     }
                 } else {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 16; i ++) {
                         gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 4 + option * 2);
                     }
                 }
             }
+            break;
+        }
+        case SCORES: {
+            Saves* saves = game->getSaves();
+            gfx->write("TOP SCORES", dest.x, dest.y, 255, 255, 255, 255);
+            gfx->write("----------------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            std::vector<int> scores = saves->getScores(6);
+            for (int i = 0; i < 6; i ++) {
+                gfx->write(std::to_string(i + 1) + ". " + Math::format(scores[i], 10, ' '), dest.x + 2, dest.y + 3 + i * 2);
+            }
+            gfx->write("BACK", dest.x + 4, dest.y + 17, 255, 255, 255, 200);
+            gfx->write(">", dest.x + 2, dest.y + 17, 0, 128, 255, 255);
+            for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
+                gfx->setBackColor(
+                    0, 128, 255, 
+                    round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
+                    i, dest.y + 17);
+            }
+            if (clicked) {
+                if (highlight) {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 17);
+                    }
+                } else {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 17);
+                    }
+                }
+            }
+            break;
+        }
+        case END_GAME: {
+            gfx->write("GAME OVER", dest.x, dest.y, 255, 255, 255, 255);
+            gfx->write("-------------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            Entity* interface = game->getEntityManager()->getEntityByName("Interface");
+            Panel* panel = interface->getComponent<Panel>();
+            int score = panel->getScore();
+            std::vector<int> times = panel->getTime();
+            std::string time = Math::format(times[0], 2, '0') + ":" + Math::format(times[1], 2, '0') + ":" + Math::format(times[2], 2, '0');
+            gfx->write("SCORE:      " + Math::format(score, 8, ' '), dest.x, dest.y + 3);
+            gfx->write("CLEAR TIME: " + Math::format(time, 8, ' '), dest.x, dest.y + 5);
+
+            gfx->write("NEXT GAME", dest.x + 2, dest.y + 7, 255, 255, 255, 200);
+            gfx->write("CURRENT SCORES", dest.x + 2, dest.y + 9, 255, 255, 255, 200);
+            gfx->write("MAIN MENU", dest.x + 2, dest.y + 11, 255, 255, 255, 200);
+            gfx->write("QUIT", dest.x + 2, dest.y + 13, 255, 255, 255, 200);
+            gfx->write(">", dest.x, dest.y + 7 + option * 2, 0, 128, 255, 255);
+            for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
+                gfx->setBackColor(
+                    0, 128, 255, 
+                    round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
+                    i, dest.y + 7 + option * 2);
+            }
+            if (clicked) {
+                if (highlight) {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 7 + option * 2);
+                    }
+                } else {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 7 + option * 2);
+                    }
+                }
+            }
+
             break;
         }
     }

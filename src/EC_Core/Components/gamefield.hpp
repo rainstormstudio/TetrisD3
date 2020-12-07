@@ -36,6 +36,8 @@ class GameField : public Component {
     Entity* nextTetro;
     double speed;
 
+    bool lost;
+
 public:
     GameField(int preoccupiedrows);
 
@@ -60,6 +62,8 @@ public:
     void setSpeed(double value) {
         speed = value;
     }
+
+    void clearField();
 
     void init() override;
 

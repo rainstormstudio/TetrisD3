@@ -17,9 +17,11 @@ Music::~Music() {
 
 void Music::init() {
     Config* cfg = owner->game->getCFG();
-    if (cfg->mute_music) return;
     if (Mix_PlayingMusic() == 0) {
         Mix_PlayMusic(music, -1);
+    }
+    if (cfg->mute_music) {
+        Mix_PauseMusic();
     }
 }
 
@@ -32,6 +34,12 @@ void Music::pauseMusic() {
         } else {
             Mix_PauseMusic();
         }
+    }
+}
+
+void Music::stopMusic() {
+    if (Mix_PlayingMusic() && Mix_PausedMusic() != 1) {
+        Mix_PauseMusic();
     }
 }
 
