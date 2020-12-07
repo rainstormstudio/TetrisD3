@@ -30,6 +30,8 @@ Config::Config(std::string filename) {
     cleartetrisSFXPath = "./assets/audio/clear.wav";
     screenWidth = 1280;
     screenHeight = 720;
+    music_volume = 128;
+    sfx_volume = 128;
     mute_music = false;
     mute_sfx = false;
     input = std::vector<std::string>(TOTAL_INPUTTYPES);
@@ -103,9 +105,19 @@ Config::Config(std::string filename) {
                 if (value == "TRUE") {
                     mute_music = true;
                 }
+            } else if (tag == "MUSIC_VOLUME" && Math::isNat(value)) {
+                int temp = std::stoi(value);
+                if (0 <= temp && temp <= 128) {
+                    music_volume = temp;
+                }
             } else if (tag == "MUTE_SFX") {
                 if (value == "TRUE") {
                     mute_sfx = true;
+                }
+            } else if (tag == "SFX_VOLUME" && Math::isNat(value)) {
+                int temp = std::stoi(value);
+                if (0 <= temp && temp <= 128) {
+                    sfx_volume = temp;
                 }
             } else if (tag == "UP") {
                 input[MOVEUP] = value;

@@ -29,6 +29,9 @@ class GameField : public Component {
     double airspeed;
     SDL_Rect air;
 
+    int levelup;
+    double levelupprocess;
+
     Entity* currentTetro;
     Entity* nextTetro;
     double speed;
@@ -47,6 +50,8 @@ public:
     void droplines();
 
     void triggerAirflow(int row, int col, int width);
+
+    void triggerLevelup();
 
     double getSpeed() const {
         return speed;

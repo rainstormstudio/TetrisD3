@@ -108,7 +108,7 @@ void Tetromino::harddrop() {
 void Tetromino::init() {
     static std::vector<TetroType> bag = {};
     if (bag.empty()) {
-        bag = {TETRO_I, TETRO_J, TETRO_L, TETRO_S, TETRO_T, TETRO_Z};
+        bag = {TETRO_I, TETRO_J, TETRO_L, TETRO_O, TETRO_S, TETRO_T, TETRO_Z};
         std::random_shuffle(bag.begin(), bag.end());
     }
     type = TetroType(bag.back());

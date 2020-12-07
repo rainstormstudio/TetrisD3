@@ -22,6 +22,9 @@ public:
     std::string cleartetrisSFXPath;
     unsigned int screenWidth;
     unsigned int screenHeight;
+
+    int music_volume;   // 0 - 128
+    int sfx_volume;     // 0 - 128
     bool mute_music;
     bool mute_sfx;
     std::vector<std::string> input;

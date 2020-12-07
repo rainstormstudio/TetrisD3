@@ -3,6 +3,7 @@
 #include "inputManager.hpp"
 #include "texture.hpp"
 #include "media.hpp"
+#include "config.hpp"
 #include "debug.hpp"
 
 Menu::Menu(Game* game, std::string texturefile, std::string moveSFXfile, SDL_Rect src, SDL_Rect dest) 
@@ -53,18 +54,24 @@ void Menu::choose() {
         case PAUSE_MENU: {
             switch (option) {
                 case 0: {   // resume
-                    reset();
+                reset();
                     game->setPause();
                     break;
                 }
-                case 2: {   // main menu
+                case 1: {   // restart
+                    reset();
+                    game->endLevel();
+                    game->createLevel();
+                    break;
+                }
+                case 3: {   // main menu
                     reset();
                     Debug::msg("call endLevel", 1);
                     game->endLevel();
                     Debug::msg("called endLevel", 1);
                     break;
                 }
-                case 3: {   // quit game
+                case 4: {   // quit game
                     game->state = NO_GAME;
                     break;
                 }
@@ -76,6 +83,8 @@ void Menu::choose() {
 }
 
 void Menu::triggerMoveSFX() {
+    Config* cfg = game->getCFG();
+    if (cfg->mute_sfx) return;
     Mix_PlayChannel(-1, move_sfx, 0);
 }
 
@@ -89,7 +98,7 @@ void Menu::moveOption(int delta) {
             break;
         }
         case PAUSE_MENU: {
-            option = (option + 4 + delta) % 4;
+            option = (option + 5 + delta) % 5;
             triggerMoveSFX();
             process = 0.0;
             optionCol = dest.x + 4;
@@ -98,6 +107,8 @@ void Menu::moveOption(int delta) {
 }
 
 void Menu::update() {
+    Config* cfg = game->getCFG();
+    Mix_Volume(-1, cfg->sfx_volume);
     double deltatime = game->getDeltaTime();
     InputManager* event = game->getEvent();
     if (clicked) {
@@ -216,10 +227,13 @@ void Menu::render() {
             break;
         }
         case PAUSE_MENU: {
+            gfx->write("PAUSED", dest.x + 2, dest.y + 2, 255, 255, 255, 255);
+            gfx->write("----------", dest.x + 2, dest.y + 3, 255, 255, 255, 255);
             gfx->write("RESUME", dest.x + 4, dest.y + 6, 255, 255, 255, 200);
-            gfx->write("SETTINGS", dest.x + 4, dest.y + 8, 255, 255, 255, 200);
-            gfx->write("MAIN MENU", dest.x + 4, dest.y + 10, 255, 255, 255, 200);
-            gfx->write("QUIT GAME", dest.x + 4, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("RESTART", dest.x + 4, dest.y + 8, 255, 255, 255, 200);
+            gfx->write("SETTINGS", dest.x + 4, dest.y + 10, 255, 255, 255, 200);
+            gfx->write("MAIN MENU", dest.x + 4, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("QUIT GAME", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
 
             gfx->write(">", dest.x + 2, dest.y + 6 + option * 2, 0, 128, 255, 255);
             for (int i = dest.x + 4; i < optionCol; i ++) {

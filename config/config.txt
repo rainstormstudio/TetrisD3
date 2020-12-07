@@ -15,12 +15,15 @@ CLEARTRIPLE_SFX=./assets/audio/tetris99/triple.wav
 CLEARTETRIS_SFX=./assets/audio/tetris99/tetris.wav
 
 # window info
-#SCREENWIDTH=800
-#SCREENHEIGHT=600
+#SCREENWIDTH=1920
+#SCREENHEIGHT=1080
 
-# sound settings
+# music settings
+# volume range: 0 - 128
 MUTE_MUSIC=FALSE
+MUSIC_VOLUME=10
 MUTE_SFX=FALSE
+SFX_VOLUME=10
 
 # key configs
 # uses SDL key names

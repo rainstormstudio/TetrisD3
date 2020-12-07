@@ -21,7 +21,8 @@ Game::Game() {
 }
 
 Game::~Game() {
-    manager->destroy();
+    if (manager)
+        manager->destroy();
     Mix_FreeChunk(clearSFX);
     Mix_FreeChunk(fallSFX);
     clearSFX = nullptr;
@@ -77,10 +78,12 @@ Entity* Game::createTetro(double speed) {
 }
 
 void Game::endLevel() {
-    Debug::enabled = true;
+    Debug::enabled = false;
     Debug::msg("start destroying manager");
-    manager->destroy();
+    if (manager)
+        manager->destroy();
     delete manager;
+    manager = nullptr;
     Debug::msg("end destroying manager");
     Debug::line();
     state = MENU;
@@ -113,7 +116,7 @@ void Game::update() {
             break;
         }
         case MENU: {
-            Debug::enabled = true;
+            Debug::enabled = false;
             Debug::msg("updating event", 1);
             event->update();
             Debug::msg("updated event", 1);
@@ -161,6 +164,7 @@ void Game::update() {
 }
 
 void Game::render() {
+    Debug::enabled = false;
     Debug::msg("Game::render start");
     switch (state) {
         case NO_GAME: {

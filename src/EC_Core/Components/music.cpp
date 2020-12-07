@@ -7,7 +7,6 @@ Music::Music(std::string filename) {
     if (music == nullptr) {
         std::cerr << "Failed to load music; SDL_mixer Error: " << Mix_GetError() << std::endl;
     }
-    volumeRatio = 0.5;
 }
 
 Music::~Music() {
@@ -37,5 +36,6 @@ void Music::pauseMusic() {
 }
 
 void Music::update() {
-    Mix_VolumeMusic(MIX_MAX_VOLUME * volumeRatio);
+    Config* cfg = owner->game->getCFG();
+    Mix_VolumeMusic(cfg->music_volume);
 }

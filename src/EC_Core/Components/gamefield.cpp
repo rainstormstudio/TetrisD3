@@ -27,6 +27,8 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     currentTetro = nullptr;
     nextTetro = nullptr;
     speed = 1.0;
+    levelup = 0;
+    levelupprocess = 0.0;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -124,6 +126,11 @@ void GameField::triggerAirflow(int row, int col, int width) {
     airflow = 1.0;
 }
 
+void GameField::triggerLevelup() {
+    levelup = 10;
+    levelupprocess = 0.0;
+}
+
 void GameField::init() {
     for (int i = 0; i < preoccupiedrows; i ++) {
         for (int j = 0; j < cols; j ++) {
@@ -145,6 +152,13 @@ void GameField::update() {
             air.y --;
             airflowprocess = 0.0;
             airflow -= 0.1;
+        }
+    }
+    if (levelup > 0) {
+        levelupprocess += 10.0 * deltatime;
+        if (levelupprocess > 1.0) {
+            levelup --;
+            levelupprocess = 0.0;
         }
     }
     if (lines.empty()) {
@@ -210,6 +224,24 @@ void GameField::render() {
                     round(i - rows + 21 + transform->position.y + air.y));
                 delete cell;
             }
+        }
+    }
+    if (levelup > 0) {
+        if (levelup % 3 == 2) {
+            gfx->write("LE", transform->position.x - 2, transform->position.y + 7, 255, 255, 255, 255, 255, 0, 0, 255);
+            gfx->write("VE", transform->position.x - 2, transform->position.y + 8, 255, 255, 255, 255, 255, 128, 0, 255);
+            gfx->write("L ", transform->position.x - 2, transform->position.y + 9, 255, 255, 255, 255, 255, 255, 0, 255);
+            gfx->write("UP", transform->position.x - 2, transform->position.y + 10, 255, 255, 255, 255, 255, 0, 0, 255);
+        } else if (levelup % 3 == 1) {
+            gfx->write("LE", transform->position.x - 2, transform->position.y + 7, 255, 255, 255, 255, 255, 128, 0, 255);
+            gfx->write("VE", transform->position.x - 2, transform->position.y + 8, 255, 255, 255, 255, 255, 255, 0, 255);
+            gfx->write("L ", transform->position.x - 2, transform->position.y + 9, 255, 255, 255, 255, 255, 0, 0, 255);
+            gfx->write("UP", transform->position.x - 2, transform->position.y + 10, 255, 255, 255, 255, 255, 128, 0, 255);
+        } else {
+            gfx->write("LE", transform->position.x - 2, transform->position.y + 7, 255, 255, 255, 255, 255, 255, 0, 255);
+            gfx->write("VE", transform->position.x - 2, transform->position.y + 8, 255, 255, 255, 255, 255, 0, 0, 255);
+            gfx->write("L ", transform->position.x - 2, transform->position.y + 9, 255, 255, 255, 255, 255, 128, 0, 255);
+            gfx->write("UP", transform->position.x - 2, transform->position.y + 10, 255, 255, 255, 255, 255, 255, 0, 255);
         }
     }
 }

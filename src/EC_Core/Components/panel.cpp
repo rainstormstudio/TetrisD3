@@ -50,6 +50,7 @@ void Panel::addlines(int num) {
         Entity* gamefield = owner->manager.getEntityByName("Playfield");
         GameField* playfield = gamefield->getComponent<GameField>();
         playfield->setSpeed(playfield->getSpeed() * 1.1);
+        playfield->triggerLevelup();
         lines = lines % 10;
     }
 }

@@ -43,3 +43,8 @@
         if (cfg->mute_sfx) return;
         Mix_PlayChannel(-1, tetris_sfx, 0);
     }
+
+    void SoundEffects::update() {
+        Config* cfg = owner->game->getCFG();
+        Mix_Volume(-1, cfg->sfx_volume);
+    }

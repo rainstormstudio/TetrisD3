@@ -7,7 +7,6 @@
 class Music : public Component {
     Mix_Music *music;
 public:
-    double volumeRatio;
     Music(std::string filename);
 
     ~Music();
