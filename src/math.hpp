@@ -20,6 +20,8 @@ namespace Math {
     int max(int a, int b);
 
     int min(int a, int b);
+
+    bool isInside(int a, int b, int x, int y, int w, int h);
 }
 
 #endif

@@ -171,28 +171,94 @@ void Menu::triggerMoveSFX() {
 void Menu::moveOption(int delta) {
     switch (state) {
         case MENU: {
-            option = (option + 4 + delta) % 4;
+            int lastoption = option;
+            if (delta == 0) {
+                InputManager* event = game->getEvent();
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 10, 1)) {
+                    option = 0;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 10, 1)) {
+                    option = 1;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 10, 1)) {
+                    option = 2;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 18, 10, 1)) {
+                    option = 3;
+                }
+            } else {
+                option = (option + 4 + delta) % 4;
+            }
+            if (lastoption == option) break;
             triggerMoveSFX();
             process = 0.0;
             optionCol = 0;
             break;
         }
         case PAUSE_MENU: {
-            option = (option + 5 + delta) % 5;
+            int lastoption = option;
+            if (delta == 0) {
+                InputManager* event = game->getEvent();
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 6, 10, 1)) {
+                    option = 0;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 8, 10, 1)) {
+                    option = 1;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 10, 10, 1)) {
+                    option = 2;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 10, 1)) {
+                    option = 3;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 10, 1)) {
+                    option = 4;
+                }
+            } else {
+                option = (option + 5 + delta) % 5;
+            }
+            if (lastoption == option) break;
             triggerMoveSFX();
             process = 0.0;
             optionCol = 0;
             break;
         }
         case SETTINGS: {
-            option = (option + 6 + delta) % 6;
+            int lastoption = option;
+            if (delta == 0) {
+                InputManager* event = game->getEvent();
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 4, 14, 1)) {
+                    option = 0;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 6, 14, 1)) {
+                    option = 1;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 14, 1)) {
+                    option = 2;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 14, 1)) {
+                    option = 3;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 14, 1)) {
+                    option = 4;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 14, 1)) {
+                    option = 5;
+                }
+            } else {
+                option = (option + 6 + delta) % 6;
+            }
+            if (lastoption == option) break;
             triggerMoveSFX();
             process = 0.0;
             optionCol = 0;
             break;
         }
         case END_GAME: {
-            option = (option + 4 + delta) % 4;
+            int lastoption = option;
+            if (delta == 0) {
+                InputManager* event = game->getEvent();
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 7, 10, 1)) {
+                    option = 0;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 9, 10, 1)) {
+                    option = 1;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 11, 10, 1)) {
+                    option = 2;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 13, 10, 1)) {
+                    option = 3;
+                }
+            } else {
+                option = (option + 4 + delta) % 4;
+            }
+            if (lastoption == option) break;
             triggerMoveSFX();
             process = 0.0;
             optionCol = 0;
@@ -254,6 +320,9 @@ void Menu::update() {
             if (event->input[CONFIRM]) {
                 triggerMoveSFX();
                 state = MENU;
+            } else if (event->cursor.w) {
+                triggerMoveSFX();
+                state = MENU;
             }
             break;
         }
@@ -270,7 +339,14 @@ void Menu::update() {
                 moveOption(-1);
             } else if (event->input[MOVEDOWN]) {
                 moveOption(+1);
+            } else if (event->cursor.h) {
+                moveOption(0);
             } else if (event->input[CONFIRM]) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->cursor.w) {
                 clicked = true;
                 process = 0.0;
                 highlight = true;
@@ -294,7 +370,14 @@ void Menu::update() {
                 moveOption(-1);
             } else if (event->input[MOVEDOWN]) {
                 moveOption(+1);
+            } else if (event->cursor.h) {
+                moveOption(0);
             } else if (event->input[CONFIRM]) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->cursor.w) {
                 clicked = true;
                 process = 0.0;
                 highlight = true;
@@ -318,11 +401,18 @@ void Menu::update() {
                 moveOption(-1);
             } else if (event->input[MOVEDOWN]) {
                 moveOption(+1);
+            } else if (event->cursor.h) {
+                moveOption(0);
             } else if (event->input[MOVELEFT]) {
                 changeSettings(-1);
             } else if (event->input[MOVERIGHT]) {
                 changeSettings(+1);
             } else if (event->input[CONFIRM] && (option == 4 || option == 5)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->cursor.w && (option == 4 || option == 5)) {
                 clicked = true;
                 process = 0.0;
                 highlight = true;
@@ -346,6 +436,11 @@ void Menu::update() {
                 process = 0.0;
                 highlight = true;
                 countdown = 8;
+            } else if (event->cursor.w && (option == 0)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
             } else if (event->input[PAUSE]) {
                 state = prev_state;
             }
@@ -364,7 +459,14 @@ void Menu::update() {
                 moveOption(-1);
             } else if (event->input[MOVEDOWN]) {
                 moveOption(+1);
+            } else if (event->cursor.w) {
+                moveOption(0);
             } else if (event->input[CONFIRM]) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->cursor.w) {
                 clicked = true;
                 process = 0.0;
                 highlight = true;

@@ -1,11 +1,7 @@
 #ifndef INPUTMANAGER_HPP
 #define INPUTMANAGER_HPP
 
-#ifdef __linux__
-#include "SDL2/SDL.h"
-#elif _WIN32
-#include "SDL.h"
-#endif
+#include "media.hpp"
 
 #include "types.hpp"
 
@@ -27,11 +23,13 @@ class Config;
 
 class InputManager {
     Config* cfg;
+    Media* media;
     SDL_Event event;
 public:
     std::vector<bool> input;
+    SDL_Rect cursor;    // x: x; y: y; w: button down; h: moved
 
-    InputManager(Config* cfg);
+    InputManager(Config* cfg, Media* media);
     void update();
 };
 
