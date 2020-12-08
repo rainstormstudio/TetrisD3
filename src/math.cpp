@@ -46,10 +46,10 @@ int Math::min(int a, int b) {
 }
 
 bool Math::isInside(int a, int b, int x, int y, int w, int h) {
-    if (a < x || a > x + w) {
+    if (a < x || a >= x + w) {
         return false;
     }
-    if (b < y || b > y + h) {
+    if (b < y || b >= y + h) {
         return false;
     }
     return true;
