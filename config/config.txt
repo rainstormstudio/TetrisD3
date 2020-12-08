@@ -20,8 +20,8 @@ GAMEOVER_SFX=./assets/audio/tetris99/gameover.wav
 
 # window info
 FULLSCREEN=FALSE
-SCREENWIDTH=800
-SCREENHEIGHT=400
+SCREENWIDTH=1280
+SCREENHEIGHT=960
 
 # music settings
 # volume range: 0 - 128

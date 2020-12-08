@@ -459,7 +459,7 @@ void Menu::update() {
                 moveOption(-1);
             } else if (event->input[MOVEDOWN]) {
                 moveOption(+1);
-            } else if (event->cursor.w) {
+            } else if (event->cursor.h) {
                 moveOption(0);
             } else if (event->input[CONFIRM]) {
                 clicked = true;
