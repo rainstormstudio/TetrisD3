@@ -19,9 +19,9 @@ LEVELUP_SFX=./assets/audio/tetris99/levelup.wav
 GAMEOVER_SFX=./assets/audio/tetris99/gameover.wav
 
 # window info
-FULLSCREEN=TRUE
-SCREENWIDTH=1920
-SCREENHEIGHT=1080
+FULLSCREEN=FALSE
+SCREENWIDTH=1280
+SCREENHEIGHT=720
 
 # music settings
 # volume range: 0 - 128

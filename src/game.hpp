@@ -14,6 +14,7 @@ class EntityManager;
 class Entity;
 class Mix_Chunk;
 class Menu;
+class BackgroundEffect;
 
 enum GameState {
     NO_GAME,
@@ -31,6 +32,7 @@ class Game {
     EntityManager* manager;
 
     Menu* menu;
+    BackgroundEffect* bg;
 
     Time time_a;
     Time time_b;

@@ -75,14 +75,14 @@ void Panel::render() {
     Media* gfx = owner->game->getGFX();
     std::vector<int> times = getTime();
     std::string time = prefix(times[0], 2, '0') + ":" + prefix(times[1], 2, '0') + ":" + prefix(times[2], 2, '0');
-    gfx->write(time, transform->position.x + 17, transform->position.y + 10);
-    gfx->write(prefix(score, 6, ' '), transform->position.x + 17, transform->position.y + 14);
-    gfx->write(prefix(level, 6, ' '), transform->position.x + 17, transform->position.y + 16);
-    gfx->write(prefix(totallines, 6, ' '), transform->position.x + 17, transform->position.y + 18);
+    gfx->write(time, transform->position.x + 17, transform->position.y + 10, 255, 255, 255, 255, 0, 0, 0, 255);
+    gfx->write(prefix(score, 6, ' '), transform->position.x + 17, transform->position.y + 14, 255, 255, 255, 255, 0, 0, 0, 255);
+    gfx->write(prefix(level, 6, ' '), transform->position.x + 17, transform->position.y + 16, 255, 255, 255, 255, 0, 0, 0, 255);
+    gfx->write(prefix(totallines, 6, ' '), transform->position.x + 17, transform->position.y + 18, 255, 255, 255, 255, 0, 0, 0, 255);
     Entity* gamefield = owner->manager.getEntityByName("Playfield");
     GameField* playfield = gamefield->getComponent<GameField>();
     std::string speed = doubleToString(playfield->getSpeed(), 8, ' ');
-    gfx->write(speed, transform->position.x + 17, transform->position.y + 7);
+    gfx->write(speed, transform->position.x + 17, transform->position.y + 7, 255, 255, 255, 255, 0, 0, 0, 255);
     for (int i = 9 - lines; i < 9; i ++) {
         for (int j = 0; j < 2; j ++) {
             CPixel* info = new CPixel(bar[i]);

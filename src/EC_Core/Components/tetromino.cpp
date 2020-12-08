@@ -153,6 +153,11 @@ void Tetromino::render() {
         SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 1)), 
                             static_cast<int>(round(interfaceTransform->position.y + 2)), 
                             src.w, src.h};
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                gfx->setBackColor(0, 0, 0, 255, i + tdest.x, j + tdest.y);
+            }
+        }
         if (src.w == 3) tdest.x ++;
         if (src.h == 3) tdest.y ++;
         gfx->drawTexture(texture, tsrc, tdest);
@@ -164,6 +169,11 @@ void Tetromino::render() {
         SDL_Rect tdest = {static_cast<int>(round(interfaceTransform->position.x + 17)), 
                             static_cast<int>(round(interfaceTransform->position.y + 1)), 
                             src.w, src.h};
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                gfx->setBackColor(0, 0, 0, 255, i + tdest.x, j + tdest.y);
+            }
+        }
         if (src.w == 3) tdest.x ++;
         if (src.h == 3) tdest.y ++;
         gfx->drawTexture(texture, tsrc, tdest);

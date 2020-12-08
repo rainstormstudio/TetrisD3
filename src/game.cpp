@@ -7,6 +7,7 @@
 #include "math.hpp"
 #include "command.hpp"
 #include "menu.hpp"
+#include "backgroundEffect.hpp"
 #include "./EC_Core/entityManager.hpp"
 #include "./EC_Core/entity.hpp"
 #include "./EC_Core/componentList.hpp"
@@ -19,6 +20,7 @@ Game::Game() {
     event = nullptr;
     manager = nullptr;
     menu = nullptr;
+    bg = nullptr;
     Math::initRandom();
 }
 
@@ -29,6 +31,7 @@ Game::~Game() {
     Mix_FreeChunk(fallSFX);
     clearSFX = nullptr;
     fallSFX = nullptr;
+    delete bg;
     delete menu;
     delete manager;
     delete event;
@@ -96,7 +99,7 @@ void Game::endLevel() {
 }
 
 void Game::init() {
-    Debug::enabled = true;
+    Debug::enabled = false;
     Debug::msg("Game::init start");
     cfg = new Config("./config/config.txt");
     Debug::msg("cfg constructed", 1);
@@ -107,7 +110,9 @@ void Game::init() {
     event = new InputManager(cfg);
     Debug::msg("event constructed", 1);
     menu = new Menu(this, cfg->titlePath, cfg->softdropSFXPath, {0, 0, 17, 10}, {12, 4, 17, 10});
-    
+    Debug::msg("menu constructed", 1);
+    bg = new BackgroundEffect(this, {0, 0, 40, 30});
+
     Debug::msg("Game::init done");
     Debug::line();
 
@@ -139,6 +144,7 @@ void Game::update() {
         }
         case IN_GAME: {
             event->update();
+            bg->update();
             Debug::msg("update MAP");
             manager->updateByLayer(Layer::MAP);
             manager->updateByLayer(Layer::UI);
@@ -187,6 +193,7 @@ void Game::render() {
         }
         case IN_GAME: {
             gfx->clear();
+            bg->render();
             manager->renderByLayer(Layer::MAP);
             manager->renderByLayer(Layer::OBJECTS);
             manager->renderByLayer(Layer::UI);
