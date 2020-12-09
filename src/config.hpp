@@ -34,6 +34,8 @@ public:
     std::string cleartetrisSFXPath;
     std::string levelupSFXPath;
     std::string gameoverSFXPath;
+    std::string countdown1SFXPath;
+    std::string countdown2SFXPath;
     unsigned int screenWidth;
     unsigned int screenHeight;
 

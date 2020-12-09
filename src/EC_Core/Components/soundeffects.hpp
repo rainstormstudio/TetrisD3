@@ -14,6 +14,8 @@ class SoundEffects : public Component {
     Mix_Chunk* tetris_sfx;
     Mix_Chunk* levelup_sfx;
     Mix_Chunk* gameover_sfx;
+    Mix_Chunk* countdown1_sfx;
+    Mix_Chunk* countdown2_sfx;
 public:
     SoundEffects(
         std::string rotate_filename,
@@ -24,7 +26,9 @@ public:
         std::string triple_filename,
         std::string tetris_filename,
         std::string levelup_filename,
-        std::string gameover_filename
+        std::string gameover_filename,
+        std::string countdown1_filename,
+        std::string countdown2_filename
     ) {
         rotate_sfx = Mix_LoadWAV(rotate_filename.c_str());
         if (!rotate_sfx) std::cerr << "Failed to load sound effect: " << rotate_filename << Mix_GetError() << std::endl;
@@ -44,6 +48,10 @@ public:
         if (!levelup_sfx) std::cerr << "Failed to load sound effect: " << levelup_filename << Mix_GetError() << std::endl;
         gameover_sfx = Mix_LoadWAV(gameover_filename.c_str());
         if (!gameover_sfx) std::cerr << "Failed to load sound effect: " << gameover_filename << Mix_GetError() << std::endl;
+        countdown1_sfx = Mix_LoadWAV(countdown1_filename.c_str());
+        if (!countdown1_sfx) std::cerr << "Failed to load sound effect: " << countdown1_filename << Mix_GetError() << std::endl;
+        countdown2_sfx = Mix_LoadWAV(countdown2_filename.c_str());
+        if (!countdown2_sfx) std::cerr << "Failed to load sound effect: " << countdown2_filename << Mix_GetError() << std::endl;
     }
 
     ~SoundEffects() {
@@ -65,6 +73,10 @@ public:
         levelup_sfx = nullptr;
         Mix_FreeChunk(gameover_sfx);
         gameover_sfx = nullptr;
+        Mix_FreeChunk(countdown1_sfx);
+        countdown1_sfx = nullptr;
+        Mix_FreeChunk(countdown2_sfx);
+        countdown2_sfx = nullptr;        
     }
 
     void triggerRotate();
@@ -84,6 +96,10 @@ public:
     void triggerLevelup();
 
     void triggerGameover();
+
+    void triggerCountdown1();
+
+    void triggerCountdown2();
 
     void init() override {}
 

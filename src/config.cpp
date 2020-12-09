@@ -57,6 +57,8 @@ Config::Config(std::string filename) {
     cleartetrisSFXPath = "./assets/audio/clear.wav";
     levelupSFXPath = "./assets/audio/success.wav";
     gameoverSFXPath = "./assets/audio/gameover.wav";
+    countdown1SFXPath = "./assets/audio/countdown1.wav";
+    countdown2SFXPath = "./assets/audio/countdown2.wav";
     screenWidth = 1000;
     screenHeight = 650;
     setFullscreen(false);
@@ -136,6 +138,10 @@ Config::Config(std::string filename) {
                 levelupSFXPath = value;
             } else if (tag == "GAMEOVER_SFX") {
                 gameoverSFXPath = value;
+            } else if (tag == "COUNTDOWN1_SFX") {
+                countdown1SFXPath = value;
+            } else if (tag == "COUNTDOWN2_SFX") {
+                countdown2SFXPath = value;
             } else if (tag == "SCREENWIDTH" && Math::isNat(value)) {
                 screenWidth = std::stoi(value);
             } else if (tag == "SCREENHEIGHT" && Math::isNat(value)) {
@@ -234,6 +240,8 @@ void Config::saveToFile() {
         output << item("CLEARTRIPLE_SFX", cleartripleSFXPath) << std::endl;
         output << item("CLEARTETRIS_SFX", cleartetrisSFXPath) << std::endl;
         output << item("LEVELUP_SFX", levelupSFXPath) << std::endl;
+        output << item("COUNTDOWN1_SFX", countdown1SFXPath) << std::endl;
+        output << item("COUNTDOWN2_SFX", countdown2SFXPath) << std::endl;
         output << item("GAMEOVER_SFX", gameoverSFXPath) << std::endl;
         output << std::endl;
 

@@ -3,11 +3,12 @@
 #include "transform.hpp"
 #include "gamefield.hpp"
 #include "music.hpp"
+#include "soundeffects.hpp"
 #include "../../math.hpp"
 
 Countdown::Countdown() {
     process = 0.0;
-    number = 3;
+    number = 4;
 }
 
 Countdown::~Countdown() {
@@ -18,11 +19,25 @@ Countdown::~Countdown() {
     music->getStart();
 }
 
+void Countdown::init() {
+}
+
 void Countdown::update() {
     double deltatime = owner->game->getDeltaTime();
     process += deltatime;
+    Entity* gamefield = owner->manager.getEntityByName("Playfield");
+    SoundEffects* sfx = gamefield->getComponent<SoundEffects>();
+    if (number == 4) {
+        number --;
+        sfx->triggerCountdown1();
+    }
     if (process > 1.0) {
         number --;
+        if (number == 0) {
+            sfx->triggerCountdown2();
+        } else if (number > 0) {
+            sfx->triggerCountdown1();
+        }
         if (number == -1) {
             owner->destroy();
         }
@@ -33,7 +48,7 @@ void Countdown::update() {
 void Countdown::render() {
     Media* gfx = owner->game->getGFX();
     Transform* transform = owner->getComponent<Transform>();
-    std::cerr << number << std::endl;
+    if (number > 3) return;
     //gfx->addFilter(0.5);
     for (int row = 0; row < 7; row ++) {
         for (int col = 0; col < gfx->getScreenCols(); col ++) {
@@ -43,7 +58,7 @@ void Countdown::render() {
                         255.0 * 
                         (1.0 / Math::bellCurve(gfx->getScreenCols() / 2.0, 10.0, gfx->getScreenCols() / 2.0)) * 
                         (Math::bellCurve(col, 10.0, gfx->getScreenCols() / 2.0)));
-            
+            if (number == 0) a *= (1.0 - process);
             if (row > 0 && row < 6) {
                 gfx->addForeColor(0, 0, 0, a, x, y);
                 gfx->addBackColor(0, 0, 0, a, x, y);

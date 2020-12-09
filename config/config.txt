@@ -16,6 +16,8 @@ CLEARDOUBLE_SFX=./assets/audio/tetris99/double.wav
 CLEARTRIPLE_SFX=./assets/audio/tetris99/triple.wav
 CLEARTETRIS_SFX=./assets/audio/tetris99/tetris.wav
 LEVELUP_SFX=./assets/audio/tetris99/levelup.wav
+COUNTDOWN1_SFX=./assets/audio/countdown1.wav
+COUNTDOWN2_SFX=./assets/audio/countdown2.wav
 GAMEOVER_SFX=./assets/audio/tetris99/gameover.wav
 
 # window info

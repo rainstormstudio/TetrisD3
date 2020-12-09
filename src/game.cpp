@@ -58,7 +58,9 @@ void Game::createLevel() {
             cfg->cleartripleSFXPath,
             cfg->cleartetrisSFXPath,
             cfg->levelupSFXPath,
-            cfg->gameoverSFXPath
+            cfg->gameoverSFXPath,
+            cfg->countdown1SFXPath,
+            cfg->countdown2SFXPath
         );
     }
 
