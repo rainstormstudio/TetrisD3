@@ -109,7 +109,7 @@ void Game::init() {
     Debug::msg("gfx constructed", 1);
     event = new InputManager(cfg, gfx);
     Debug::msg("event constructed", 1);
-    menu = new Menu(this, cfg->titlePath, cfg->softdropSFXPath, {0, 0, 17, 10}, {12, 4, 17, 10});
+    menu = new Menu(this, cfg->titlePath, cfg->softdropSFXPath, {0, 0, 17, 10}, {12, 2, 17, 10});
     Debug::msg("menu constructed", 1);
     bg = new BackgroundEffect(this, {0, 0, 40, 30});
 

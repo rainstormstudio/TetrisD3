@@ -144,6 +144,7 @@ void Media::write(std::string content, int x, int y) {
     }
     int len = content.length();
     for (int i = 0; i < len && x + i < numCols; ++i) {
+        if (content[i] == ' ') continue;
         textDisplay[y][x + i]->setIndex(content[i]);
     }
 }
@@ -154,6 +155,7 @@ void Media::write(std::string content, int x, int y, Uint8 r, Uint8 g, Uint8 b, 
     }
     int len = content.length();
     for (int i = 0; i < len && x + i < numCols; ++i) {
+        if (content[i] == ' ') continue;
         textDisplay[y][x + i]->setIndex(content[i]);
         textDisplay[y][x + i]->setForeColor(r, g, b, a);
     }

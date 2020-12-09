@@ -13,7 +13,8 @@ public:
         TITLE,
         MENU,
         PAUSE_MENU,
-        SETTINGS,
+        MUSIC_SETTING,
+        KEY_MAPPING,
         SCORES,
         END_GAME
     };

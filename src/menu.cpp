@@ -56,13 +56,19 @@ void Menu::choose() {
                     state = SCORES;
                     break;
                 }
-                case 2: {   // setting
+                case 2: {   // music setting
                     reset();
                     prev_state = MENU;
-                    state = SETTINGS;
+                    state = MUSIC_SETTING;
                     break;
                 }
-                case 3: {   // quit game
+                case 3: {   // key mapping
+                    reset();
+                    prev_state = MENU;
+                    state = KEY_MAPPING;
+                    break;
+                }
+                case 4: {   // quit game
                     game->state = NO_GAME;
                     break;
                 }
@@ -82,27 +88,33 @@ void Menu::choose() {
                     game->createLevel();
                     break;
                 }
-                case 2: {   // settings
+                case 2: {   // music settings
                     reset();
                     prev_state = PAUSE_MENU;
-                    state = SETTINGS;
+                    state = MUSIC_SETTING;
                     break;
                 }
-                case 3: {   // main menu
+                case 3: {   // key mapping
+                    reset();
+                    prev_state = PAUSE_MENU;
+                    state = KEY_MAPPING;
+                    break;
+                }
+                case 4: {   // main menu
                     reset();
                     Debug::msg("call endLevel", 1);
                     game->endLevel();
                     Debug::msg("called endLevel", 1);
                     break;
                 }
-                case 4: {   // quit game
+                case 5: {   // quit game
                     game->state = NO_GAME;
                     break;
                 }
             }
             break;
         }
-        case SETTINGS: {
+        case MUSIC_SETTING: {
             switch (option) {
                 case 4: {   // save settings to config file
                     Config* cfg = game->getCFG();
@@ -115,6 +127,16 @@ void Menu::choose() {
                     break;
                 }
                 case 5: {   // back
+                    reset();
+                    state = prev_state;
+                    break;
+                }
+            }
+            break;
+        }
+        case KEY_MAPPING: {
+            switch (option) {
+                case 0: {   // back
                     reset();
                     state = prev_state;
                     break;
@@ -182,9 +204,11 @@ void Menu::moveOption(int delta) {
                     option = 2;
                 } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 18, 10, 1)) {
                     option = 3;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 20, 10, 1)) {
+                    option = 4;
                 }
             } else {
-                option = (option + 4 + delta) % 4;
+                option = (option + 5 + delta) % 5;
             }
             if (lastoption == option) break;
             triggerMoveSFX();
@@ -206,9 +230,11 @@ void Menu::moveOption(int delta) {
                     option = 3;
                 } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 10, 1)) {
                     option = 4;
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 10, 1)) {
+                    option = 5;
                 }
             } else {
-                option = (option + 5 + delta) % 5;
+                option = (option + 6 + delta) % 6;
             }
             if (lastoption == option) break;
             triggerMoveSFX();
@@ -216,7 +242,7 @@ void Menu::moveOption(int delta) {
             optionCol = 0;
             break;
         }
-        case SETTINGS: {
+        case MUSIC_SETTING: {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
@@ -388,7 +414,7 @@ void Menu::update() {
             }
             break;
         }
-        case SETTINGS: {
+        case MUSIC_SETTING: {
             process += deltatime * 70.0;
             if (process > 1.0) {
                 optionCol ++;
@@ -413,6 +439,30 @@ void Menu::update() {
                 highlight = true;
                 countdown = 8;
             } else if (event->cursor.w && (option == 4 || option == 5)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->input[PAUSE]) {
+                state = prev_state;
+            }
+            break;
+        }
+        case KEY_MAPPING: {
+            process += deltatime * 70.0;
+            if (process > 1.0) {
+                optionCol ++;
+                if (optionCol > 14) {
+                    optionCol = 14;
+                }
+                process = 0.0;
+            }
+            if (event->input[CONFIRM] && (option == 0)) {
+                clicked = true;
+                process = 0.0;
+                highlight = true;
+                countdown = 8;
+            } else if (event->cursor.w && (option == 0)) {
                 clicked = true;
                 process = 0.0;
                 highlight = true;
@@ -493,8 +543,9 @@ void Menu::render() {
             gfx->drawTexture(titleTexture, src, dest);
             gfx->write("PLAY GAME", dest.x + 4, dest.y + 12, 255, 255, 255, 200);
             gfx->write("TOP SCORES", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
-            gfx->write("SETTINGS", dest.x + 4, dest.y + 16, 255, 255, 255, 200);
-            gfx->write("QUIT GAME", dest.x + 4, dest.y + 18, 255, 255, 255, 200);
+            gfx->write("MUSIC SETTING", dest.x + 4, dest.y + 16, 255, 255, 255, 200);
+            gfx->write("KEY MAPPING", dest.x + 4, dest.y + 18, 255, 255, 255, 200);
+            gfx->write("QUIT GAME", dest.x + 4, dest.y + 20, 255, 255, 255, 200);
 
             gfx->write(">", dest.x + 2, dest.y + 12 + option * 2, 0, 128, 255, 255);
             for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
@@ -505,11 +556,11 @@ void Menu::render() {
             }
             if (clicked) {
                 if (highlight) {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 14; i ++) {
                         gfx->setBackColor(0, 255, 0, 255, dest.x + i + 4, dest.y + 12 + option * 2);
                     }
                 } else {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 14; i ++) {
                         gfx->setBackColor(0, 0, 0, 255, dest.x + i + 4, dest.y + 12 + option * 2);
                     }
                 }
@@ -518,12 +569,13 @@ void Menu::render() {
         }
         case PAUSE_MENU: {
             gfx->write("PAUSED", dest.x + 2, dest.y + 2, 255, 255, 255, 255);
-            gfx->write("----------", dest.x + 2, dest.y + 3, 255, 255, 255, 255);
+            gfx->write("=============", dest.x + 2, dest.y + 3, 255, 255, 255, 255);
             gfx->write("RESUME", dest.x + 4, dest.y + 6, 255, 255, 255, 200);
             gfx->write("RESTART", dest.x + 4, dest.y + 8, 255, 255, 255, 200);
-            gfx->write("SETTINGS", dest.x + 4, dest.y + 10, 255, 255, 255, 200);
-            gfx->write("MAIN MENU", dest.x + 4, dest.y + 12, 255, 255, 255, 200);
-            gfx->write("QUIT GAME", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
+            gfx->write("MUSIC SETTING", dest.x + 4, dest.y + 10, 255, 255, 255, 200);
+            gfx->write("KEY MAPPING", dest.x + 4, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("MAIN MENU", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
+            gfx->write("QUIT GAME", dest.x + 4, dest.y + 16, 255, 255, 255, 200);
 
             gfx->write(">", dest.x + 2, dest.y + 6 + option * 2, 0, 128, 255, 255);
             for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
@@ -534,21 +586,23 @@ void Menu::render() {
             }
             if (clicked) {
                 if (highlight) {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 14; i ++) {
                         gfx->setBackColor(0, 255, 0, 255, dest.x + i + 4, dest.y + 6 + option * 2);
                     }
                 } else {
-                    for (int i = 0; i < 10; i ++) {
+                    for (int i = 0; i < 14; i ++) {
                         gfx->setBackColor(0, 0, 0, 255, dest.x + i + 4, dest.y + 6 + option * 2);
                     }
                 }
             }
             break;
         }
-        case SETTINGS: {
+        case MUSIC_SETTING: {
+            SDL_Rect dest = this->dest;
+            dest.x -= 2;
             Config* cfg = game->getCFG();
-            gfx->write("SETTINGS", dest.x, dest.y, 255, 255, 255, 255);
-            gfx->write("----------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            gfx->write("MUSIC SETTING", dest.x, dest.y, 255, 255, 255, 255);
+            gfx->write("=======================", dest.x, dest.y + 1, 255, 255, 255, 255);
             gfx->write("MUTE MUSIC", dest.x + 2, dest.y + 4, 255, 255, 255, 200);
             gfx->setCh(17, dest.x + 14, dest.y + 4); gfx->setCh(16, dest.x + 18, dest.y + 4);
             gfx->setForeColor(255, 255, 255, 200, dest.x + 14, dest.y + 4);
@@ -600,16 +654,59 @@ void Menu::render() {
             }
             break;
         }
+        case KEY_MAPPING: {
+            Config* cfg = game->getCFG();
+            SDL_Rect dest = this->dest;
+            dest.x -= 4;
+            gfx->write("KEY MAPPING", dest.x, dest.y, 255, 255, 255, 255);
+            gfx->write("=====================", dest.x, dest.y + 1, 255, 255, 255, 255);
+
+            gfx->write("CURRENT CONFIG FILE:", dest.x + 2, dest.y + 2, 255, 255, 255, 200);
+            gfx->write("./config/config.txt", dest.x + 2, dest.y + 3, 255, 255, 255, 200);
+            gfx->write("UP           " + Math::format(cfg->input[MOVEUP], 8, ' '), dest.x + 2, dest.y + 5, 255, 255, 255, 200);
+            gfx->write("DOWN         " + Math::format(cfg->input[MOVEDOWN], 8, ' '), dest.x + 2, dest.y + 6, 255, 255, 255, 200);
+            gfx->write("LEFT         " + Math::format(cfg->input[MOVELEFT], 8, ' '), dest.x + 2, dest.y + 7, 255, 255, 255, 200);
+            gfx->write("RIGHT        " + Math::format(cfg->input[MOVERIGHT], 8, ' '), dest.x + 2, dest.y + 8, 255, 255, 255, 200);
+            gfx->write("ROTATE RIGHT " + Math::format(cfg->input[ROTATE_RIGHT], 8, ' '), dest.x + 2, dest.y + 9, 255, 255, 255, 200);
+            gfx->write("ROTATE LEFT  " + Math::format(cfg->input[ROTATE_LEFT], 8, ' '), dest.x + 2, dest.y + 10, 255, 255, 255, 200);
+            gfx->write("HARD DROP    " + Math::format(cfg->input[DROP], 8, ' '), dest.x + 2, dest.y + 11, 255, 255, 255, 200);
+            gfx->write("PAUSE        " + Math::format(cfg->input[PAUSE], 8, ' '), dest.x + 2, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("CONFIRM      " + Math::format(cfg->input[CONFIRM], 8, ' '), dest.x + 2, dest.y + 13, 255, 255, 255, 200);
+            gfx->write("PLEASE USE CONFIG", dest.x, dest.y + 15, 255, 255, 255, 200);
+            gfx->write("FILE FOR ADJUSTMENT", dest.x, dest.y + 16, 255, 255, 255, 200);
+
+            gfx->write("BACK", dest.x + 2, dest.y + 18, 255, 255, 255, 200);
+
+            gfx->write(">", dest.x, dest.y + 18, 0, 128, 255, 255);
+            for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
+                gfx->setBackColor(
+                    0, 128, 255, 
+                    round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
+                    i, dest.y + 18);
+            }
+            if (clicked) {
+                if (highlight) {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 18);
+                    }
+                } else {
+                    for (int i = 0; i < 16; i ++) {
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 18);
+                    }
+                }
+            }
+            break;
+        }
         case SCORES: {
             Saves* saves = game->getSaves();
             gfx->write("TOP SCORES", dest.x, dest.y, 255, 255, 255, 255);
-            gfx->write("----------------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            gfx->write("================", dest.x, dest.y + 1, 255, 255, 255, 255);
             std::vector<int> scores = saves->getScores(6);
             for (int i = 0; i < 6; i ++) {
                 gfx->write(std::to_string(i + 1) + ". " + Math::format(scores[i], 10, ' '), dest.x + 2, dest.y + 3 + i * 2);
             }
-            gfx->write("BACK", dest.x + 4, dest.y + 17, 255, 255, 255, 200);
-            gfx->write(">", dest.x + 2, dest.y + 17, 0, 128, 255, 255);
+            gfx->write("BACK", dest.x + 2, dest.y + 17, 255, 255, 255, 200);
+            gfx->write(">", dest.x, dest.y + 17, 0, 128, 255, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
                 gfx->setBackColor(
                     0, 128, 255, 
@@ -631,7 +728,7 @@ void Menu::render() {
         }
         case END_GAME: {
             gfx->write("GAME OVER", dest.x, dest.y, 255, 255, 255, 255);
-            gfx->write("-------------", dest.x, dest.y + 1, 255, 255, 255, 255);
+            gfx->write("====================", dest.x, dest.y + 1, 255, 255, 255, 255);
             Entity* interface = game->getEntityManager()->getEntityByName("Interface");
             Panel* panel = interface->getComponent<Panel>();
             int score = panel->getScore();
