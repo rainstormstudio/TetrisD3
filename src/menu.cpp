@@ -669,29 +669,30 @@ void Menu::render() {
             gfx->write("RIGHT        " + Math::format(cfg->input[MOVERIGHT], 8, ' '), dest.x + 2, dest.y + 8, 255, 255, 255, 200);
             gfx->write("ROTATE RIGHT " + Math::format(cfg->input[ROTATE_RIGHT], 8, ' '), dest.x + 2, dest.y + 9, 255, 255, 255, 200);
             gfx->write("ROTATE LEFT  " + Math::format(cfg->input[ROTATE_LEFT], 8, ' '), dest.x + 2, dest.y + 10, 255, 255, 255, 200);
-            gfx->write("HARD DROP    " + Math::format(cfg->input[DROP], 8, ' '), dest.x + 2, dest.y + 11, 255, 255, 255, 200);
-            gfx->write("PAUSE        " + Math::format(cfg->input[PAUSE], 8, ' '), dest.x + 2, dest.y + 12, 255, 255, 255, 200);
-            gfx->write("CONFIRM      " + Math::format(cfg->input[CONFIRM], 8, ' '), dest.x + 2, dest.y + 13, 255, 255, 255, 200);
-            gfx->write("PLEASE USE CONFIG", dest.x, dest.y + 15, 255, 255, 255, 200);
-            gfx->write("FILE FOR ADJUSTMENT", dest.x, dest.y + 16, 255, 255, 255, 200);
+            gfx->write("SOFT DROP    " + Math::format(cfg->input[SOFTDROP], 8, ' '), dest.x + 2, dest.y + 11, 255, 255, 255, 200);
+            gfx->write("HARD DROP    " + Math::format(cfg->input[HARDDROP], 8, ' '), dest.x + 2, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("PAUSE        " + Math::format(cfg->input[PAUSE], 8, ' '), dest.x + 2, dest.y + 13, 255, 255, 255, 200);
+            gfx->write("CONFIRM      " + Math::format(cfg->input[CONFIRM], 8, ' '), dest.x + 2, dest.y + 14, 255, 255, 255, 200);
+            gfx->write("PLEASE USE CONFIG", dest.x, dest.y + 16, 255, 255, 255, 200);
+            gfx->write("FILE FOR ADJUSTMENT", dest.x, dest.y + 17, 255, 255, 255, 200);
 
-            gfx->write("BACK", dest.x + 2, dest.y + 18, 255, 255, 255, 200);
+            gfx->write("BACK", dest.x + 2, dest.y + 19, 255, 255, 255, 200);
 
-            gfx->write(">", dest.x, dest.y + 18, 255, 128, 0, 255);
+            gfx->write(">", dest.x, dest.y + 19, 255, 128, 0, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
                 gfx->addBackColor(
                     255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
-                    i, dest.y + 18);
+                    i, dest.y + 19);
             }
             if (clicked) {
                 if (highlight) {
                     for (int i = 0; i < 16; i ++) {
-                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 18);
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 19);
                     }
                 } else {
                     for (int i = 0; i < 16; i ++) {
-                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 18);
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 19);
                     }
                 }
             }

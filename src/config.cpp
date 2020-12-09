@@ -57,8 +57,8 @@ Config::Config(std::string filename) {
     cleartetrisSFXPath = "./assets/audio/clear.wav";
     levelupSFXPath = "./assets/audio/success.wav";
     gameoverSFXPath = "./assets/audio/gameover.wav";
-    screenWidth = 1280;
-    screenHeight = 720;
+    screenWidth = 1000;
+    screenHeight = 650;
     setFullscreen(false);
     music_volume = 128;
     sfx_volume = 128;
@@ -71,7 +71,8 @@ Config::Config(std::string filename) {
     input[MOVERIGHT] = "D";
     input[ROTATE_RIGHT] = "W";
     input[ROTATE_LEFT] = "Q";
-    input[DROP] = "Space";
+    input[SOFTDROP] = "S";
+    input[HARDDROP] = "Space";
     input[PAUSE] = "Return";
     input[CONFIRM] = "Return";
 
@@ -175,8 +176,10 @@ Config::Config(std::string filename) {
                 input[ROTATE_RIGHT] = value;
             } else if (tag == "ROTATE_LEFT") {
                 input[ROTATE_LEFT] = value;
-            } else if (tag == "DROP") {
-                input[DROP] = value;
+            } else if (tag == "SOFTDROP") {
+                input[SOFTDROP] = value;
+            } else if (tag == "HARDDROP") {
+                input[HARDDROP] = value;
             } else if (tag == "PAUSE") {
                 input[PAUSE] = value;
             } else if (tag == "CONFIRM") {
@@ -256,7 +259,8 @@ void Config::saveToFile() {
         output << item("RIGHT", input[MOVERIGHT]) << std::endl;
         output << item("ROTATE_RIGHT", input[ROTATE_RIGHT]) << std::endl;
         output << item("ROTATE_LEFT", input[ROTATE_LEFT]) << std::endl;
-        output << item("DROP", input[DROP]) << std::endl;
+        output << item("SOFTDROP", input[SOFTDROP]) << std::endl;
+        output << item("HARDDROP", input[HARDDROP]) << std::endl;
         output << item("PAUSE", input[PAUSE]) << std::endl;
         output << item("CONFIRM", input[CONFIRM]) << std::endl;
         output << std::endl;

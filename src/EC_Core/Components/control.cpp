@@ -23,10 +23,10 @@ Control::Control() {}
         } else if (event->input[MOVERIGHT]) {
             owner->game->executeCommand(std::make_shared<MoveRight>(owner));
             owner->game->tick = true;
-        } else if (event->input[MOVEDOWN]) {
-            owner->game->executeCommand(std::make_shared<MoveDown>(owner));
+        } else if (event->input[SOFTDROP]) {
+            owner->game->executeCommand(std::make_shared<SoftDrop>(owner));
             owner->game->tick = true;
-        } else if (event->input[DROP]) {
+        } else if (event->input[HARDDROP]) {
             owner->game->executeCommand(std::make_shared<HardDrop>(owner));
         }
     }

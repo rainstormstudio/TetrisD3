@@ -1,14 +1,14 @@
-#ifndef MOVEDOWN_HPP
-#define MOVEDOWN_HPP
+#ifndef SOFTDROP_HPP
+#define SOFTDROP_HPP
 
 #include "../command.hpp"
 #include "../EC_Core/entityManager.hpp"
 #include "../EC_Core/Components/tetromino.hpp"
 #include "../debug.hpp"
 
-class MoveDown : public Command {
+class SoftDrop : public Command {
 public:
-    MoveDown(Entity* entity) : Command(entity) {}
+    SoftDrop(Entity* entity) : Command(entity) {}
 
     void execute() override {
         Tetromino* tetromino = entity->getComponent<Tetromino>();

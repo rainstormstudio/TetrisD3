@@ -31,7 +31,7 @@ public:
         process += speed * deltatime;
         Debug::msg("process = " + std::to_string(process), 1);
         if (process >= 1.0) {
-            owner->game->executeCommand(std::make_shared<MoveDown>(owner));
+            owner->game->executeCommand(std::make_shared<SoftDrop>(owner));
             process = 0.0;
         }
     }

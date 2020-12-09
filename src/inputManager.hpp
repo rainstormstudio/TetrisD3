@@ -13,7 +13,8 @@ enum InputType {
     MOVERIGHT,
     ROTATE_RIGHT,
     ROTATE_LEFT,
-    DROP,
+    SOFTDROP,
+    HARDDROP,
     PAUSE,
     CONFIRM,
     TOTAL_INPUTTYPES
