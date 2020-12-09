@@ -33,13 +33,15 @@ Lines can be cleared by moving different tetrominoes dropping onto the playfield
 * RIGHT = D
 * ROTATE_RIGHT = W
 * ROTATE_LEFT = Q
-* DROP = Space
+* SOFTDROP = S
+* HARDDROP = Space
 * PAUSE = Escape
 * CONFIRM = Return
 ## Assets
 - audio
 - fonts
 - tilesets
+    - TetrisD3tileset.png
 - txt
     - tetrominoes.txt: the texture of tetrominoes
     - title.txt: the image of the title screen
@@ -50,11 +52,11 @@ the configuration file is under config/config.txt
 SDL2 support
 ## Build
 ```
-    cmake . && make
+cmake . && make
 ```
 ## Run
 ```
-    ./TetrisD3
+./TetrisD3
 ```
 ## Author
 Daniel Hongyu Ding
