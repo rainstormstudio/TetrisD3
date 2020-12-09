@@ -23,6 +23,7 @@
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
 #endif
+
 #include "ctexture.hpp"
 #include "texture.hpp"
 #include <vector>

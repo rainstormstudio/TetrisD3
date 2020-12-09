@@ -656,8 +656,6 @@ void Menu::render() {
         }
         case KEY_MAPPING: {
             Config* cfg = game->getCFG();
-            SDL_Rect dest = this->dest;
-            dest.x -= 4;
             gfx->write("KEY MAPPING", dest.x, dest.y, 255, 255, 255, 255);
             gfx->write("=====================", dest.x, dest.y + 1, 255, 255, 255, 255);
 
@@ -700,6 +698,8 @@ void Menu::render() {
         }
         case SCORES: {
             Saves* saves = game->getSaves();
+            SDL_Rect dest = this->dest;
+            dest.x += 2;
             gfx->write("TOP SCORES", dest.x, dest.y, 255, 255, 255, 255);
             gfx->write("================", dest.x, dest.y + 1, 255, 255, 255, 255);
             std::vector<int> scores = saves->getScores(6);

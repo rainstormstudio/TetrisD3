@@ -46,9 +46,9 @@ void BackgroundEffect::render(double Rratio, double Gratio, double Bratio) {
             CPixel* cell = new CPixel{
                 0,
                 0, 0, 0, 0,
-                round(Rratio * calcR(i * (dest.h - j))), 
-                round(Gratio * calcG((dest.w - i) * j)), 
-                round(Bratio * calcB(i * j)), 
+                static_cast<Uint8>(round(Rratio * calcR(i * (dest.h - j)))), 
+                static_cast<Uint8>(round(Gratio * calcG((dest.w - i) * j))), 
+                static_cast<Uint8>(round(Bratio * calcB(i * j))), 
                 255
             };
             gfx->drawPoint(cell, x, y);

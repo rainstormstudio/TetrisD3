@@ -19,8 +19,8 @@ include_directories(
 endif()
 
 if(WIN32)
-include_directories(../include)
-link_directories((../lib/x64))
+include_directories("${CMAKE_SOURCE_DIR}/SDL2/include")
+link_directories("${CMAKE_SOURCE_DIR}/SDL2/lib/")
 endif()
 
 
