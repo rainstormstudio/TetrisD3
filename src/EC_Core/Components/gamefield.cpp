@@ -252,15 +252,9 @@ void GameField::render() {
     if (airflow > 0.0) {
         for (int i = 0; i < air.h; i ++) {
             for (int j = 0; j < air.w; j ++) {
-                CPixel* cell = new CPixel{
-                    0,
-                    0, 0, 0, 255,
-                    255, 255, 255, static_cast<Uint8>(200 * airflow)
-                };
-                gfx->drawPoint(cell, 
+                gfx->addBackColor(255, 255, 255, static_cast<Uint8>(200 * airflow),
                     round(j + transform->position.x + air.x + 1),
                     round(i - rows + 21 + transform->position.y + air.y));
-                delete cell;
             }
         }
     }
