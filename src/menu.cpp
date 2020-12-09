@@ -246,13 +246,13 @@ void Menu::moveOption(int delta) {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
-                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 7, 10, 1)) {
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 10, 1)) {
                     option = 0;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 9, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 10, 1)) {
                     option = 1;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 11, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 10, 1)) {
                     option = 2;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 13, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 10, 1)) {
                     option = 3;
                 }
             } else {
@@ -638,27 +638,27 @@ void Menu::render() {
             std::vector<int> times = panel->getTime();
             std::string time = Math::format(times[0], 2, '0') + ":" + Math::format(times[1], 2, '0') + ":" + Math::format(times[2], 2, '0');
             gfx->write("SCORE:      " + Math::format(score, 8, ' '), dest.x, dest.y + 3);
-            gfx->write("CLEAR TIME: " + Math::format(time, 8, ' '), dest.x, dest.y + 5);
+            gfx->write("TIME:       " + Math::format(time, 8, ' '), dest.x, dest.y + 5);
 
-            gfx->write("NEXT GAME", dest.x + 2, dest.y + 7, 255, 255, 255, 200);
-            gfx->write("CURRENT SCORES", dest.x + 2, dest.y + 9, 255, 255, 255, 200);
-            gfx->write("MAIN MENU", dest.x + 2, dest.y + 11, 255, 255, 255, 200);
-            gfx->write("QUIT", dest.x + 2, dest.y + 13, 255, 255, 255, 200);
-            gfx->write(">", dest.x, dest.y + 7 + option * 2, 0, 128, 255, 255);
+            gfx->write("NEXT GAME", dest.x + 2, dest.y + 8, 255, 255, 255, 200);
+            gfx->write("CURRENT SCORES", dest.x + 2, dest.y + 10, 255, 255, 255, 200);
+            gfx->write("MAIN MENU", dest.x + 2, dest.y + 12, 255, 255, 255, 200);
+            gfx->write("QUIT", dest.x + 2, dest.y + 14, 255, 255, 255, 200);
+            gfx->write(">", dest.x, dest.y + 8 + option * 2, 0, 128, 255, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
                 gfx->setBackColor(
                     0, 128, 255, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
-                    i, dest.y + 7 + option * 2);
+                    i, dest.y + 8 + option * 2);
             }
             if (clicked) {
                 if (highlight) {
                     for (int i = 0; i < 16; i ++) {
-                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 7 + option * 2);
+                        gfx->setBackColor(0, 255, 0, 255, dest.x + i + 2, dest.y + 8 + option * 2);
                     }
                 } else {
                     for (int i = 0; i < 16; i ++) {
-                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 7 + option * 2);
+                        gfx->setBackColor(0, 0, 0, 255, dest.x + i + 2, dest.y + 8 + option * 2);
                     }
                 }
             }
