@@ -26,9 +26,9 @@ SCREENHEIGHT=650
 # music settings
 # volume range: 0 - 128
 MUTE_MUSIC=FALSE
-MUSIC_VOLUME=100
+MUSIC_VOLUME=20
 MUTE_SFX=FALSE
-SFX_VOLUME=100
+SFX_VOLUME=20
 
 # key configs
 # use SDL key names

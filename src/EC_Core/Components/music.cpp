@@ -7,6 +7,7 @@ Music::Music(std::string filename) {
     if (music == nullptr) {
         std::cerr << "Failed to load music; SDL_mixer Error: " << Mix_GetError() << std::endl;
     }
+    active = false;
 }
 
 Music::~Music() {
@@ -16,6 +17,10 @@ Music::~Music() {
 }
 
 void Music::init() {
+    
+}
+
+void Music::getStart() {
     Config* cfg = owner->game->getCFG();
     if (Mix_PlayingMusic() == 0) {
         Mix_PlayMusic(music, -1);

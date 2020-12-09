@@ -1,5 +1,5 @@
 #include "math.hpp"
-#include <cmath>
+#include <math.h>
 
 void Math::initRandom() {
     srand(time(NULL));
@@ -53,4 +53,11 @@ bool Math::isInside(int a, int b, int x, int y, int w, int h) {
         return false;
     }
     return true;
+}
+
+double Math::bellCurve(double x, double sd, double mean) {
+    const double PI = 3.14159265358979323846;
+    double temp = (x - mean) / sd;
+    double y = (1 / sd * sqrt(2 * PI)) * exp(-1.0 / 2.0 * temp * temp);
+    return y;
 }

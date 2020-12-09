@@ -130,7 +130,7 @@ void Game::update() {
         case MENU: {
             Debug::enabled = false;
             event->update();
-            bg->update();
+            bg->update(0.2, 0.5, 0.5);
             menu->update();
 
             if (event->input[QUIT]) {
@@ -141,10 +141,11 @@ void Game::update() {
         }
         case IN_GAME: {
             event->update();
-            bg->update();
+            bg->update(1.0, 1.0, 1.0);
             Debug::msg("update MAP");
             manager->updateByLayer(Layer::MAP);
             manager->updateByLayer(Layer::UI);
+            manager->updateByLayer(Layer::EFFECTS);
             Debug::msg("update MAP done");
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -163,7 +164,7 @@ void Game::update() {
         }
         case END_GAME: {
             event->update();
-            bg->update();
+            bg->update(0.0, 0.5, 0.5);
             menu->update();
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -185,17 +186,18 @@ void Game::render() {
         }
         case MENU: {
             gfx->clear();
-            bg->render(0.2, 0.5, 0.5);
+            bg->render();
             menu->render();
             gfx->render();
             break;
         }
         case IN_GAME: {
             gfx->clear();
-            bg->render(1.0, 1.0, 1.0);
+            bg->render();
             manager->renderByLayer(Layer::MAP);
             manager->renderByLayer(Layer::OBJECTS);
             manager->renderByLayer(Layer::UI);
+            manager->renderByLayer(Layer::EFFECTS);
             gfx->render();
             break;
         }
@@ -209,7 +211,7 @@ void Game::render() {
         }
         case END_GAME: {
             gfx->clear();
-            bg->render(0.0, 0.5, 0.5);
+            bg->render();
             menu->render();
             gfx->render();
             break;

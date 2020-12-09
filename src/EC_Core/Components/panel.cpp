@@ -36,10 +36,14 @@ Panel::Panel() {
     totallines = 0;
     lines = 0;
     timepassed = 0;
+    active = false;
 }
 
-void Panel::init() {
+void Panel::setActive(bool value) {
+    active = value;
 }
+
+void Panel::init() {}
 
 void Panel::addlines(int num) {
     score += points[num] * (level + 1);
@@ -56,7 +60,8 @@ void Panel::addlines(int num) {
 }
 
 void Panel::update() {
-    timepassed += owner->game->getDeltaTime();
+    if (active) 
+        timepassed += owner->game->getDeltaTime();
 }
 
 void Panel::render() {

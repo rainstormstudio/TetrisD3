@@ -22,6 +22,8 @@ namespace Math {
     int min(int a, int b);
 
     bool isInside(int a, int b, int x, int y, int w, int h);
+
+    double bellCurve(double x, double sd, double mean);
 }
 
 #endif

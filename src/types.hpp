@@ -61,6 +61,7 @@ namespace Layer {
         MAP,
         OBJECTS,
         UI,
+        EFFECTS,
         TOTAL
     };
 };

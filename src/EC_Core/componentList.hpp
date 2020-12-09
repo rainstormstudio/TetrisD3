@@ -11,5 +11,6 @@
 #include "./Components/panel.hpp"
 #include "./Components/music.hpp"
 #include "./Components/soundeffects.hpp"
+#include "./Components/countdown.hpp"
 
 #endif

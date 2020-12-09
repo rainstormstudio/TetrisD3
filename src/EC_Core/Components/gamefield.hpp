@@ -38,8 +38,12 @@ class GameField : public Component {
 
     bool lost;
 
+    bool active;
+
 public:
     GameField(int preoccupiedrows);
+
+    void getStart();
 
     bool isOccupied(int row, int col);
 

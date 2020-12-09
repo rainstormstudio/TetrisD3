@@ -20,6 +20,8 @@ class Panel : public Component {
     int totallines;
     int lines;
 
+    bool active;
+
     std::string prefix(int value, int width, char ch);
 
     std::string doubleToString(double value, int width, char ch);
@@ -27,6 +29,8 @@ public:
     Panel();
 
     void init() override;
+
+    void setActive(bool value);
 
     void addlines(int num);
 

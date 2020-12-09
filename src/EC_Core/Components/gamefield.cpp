@@ -3,6 +3,7 @@
 #include "transform.hpp"
 #include "panel.hpp"
 #include "music.hpp"
+#include "countdown.hpp"
 #include "soundeffects.hpp"
 #include "../../game.hpp"
 #include "../../saves.hpp"
@@ -33,6 +34,7 @@ GameField::GameField(int preoccupiedrows) : preoccupiedrows{preoccupiedrows}  {
     levelup = 0;
     levelupprocess = 0.0;
     lost = false;
+    active = false;
 }
 
 bool GameField::isOccupied(int row, int col) {
@@ -144,14 +146,26 @@ void GameField::init() {
             playfield[rows - 1 - i][j] = {true, 20, 255, 255, 255, 240, 255, 255, 255, 155};
         }
     }
+    Entity* countdown = owner->manager.addEntity("Countdown", Layer::EFFECTS); {
+        countdown->addComponent<Transform>(0, 10);
+        countdown->addComponent<Countdown>();
+    }
+}
 
+void GameField::getStart() {
     currentTetro = owner->game->createTetro(1.0);
     Tetromino* tetromino = currentTetro->getComponent<Tetromino>();
     tetromino->setHold(true);
     nextTetro = owner->game->createTetro(1.0);
+    active = true;
+
+    Entity* interface = owner->manager.getEntityByName("Interface");
+    Panel* panel = interface->getComponent<Panel>();
+    panel->setActive(true);
 }
 
 void GameField::update() {
+    if (!active) return;
     if (lost) {
         double deltatime = owner->game->getDeltaTime();
         if (airflow > 0.0) {
@@ -210,6 +224,9 @@ void GameField::update() {
                         if (nextTetro) {
                             nextTetro->destroy();
                         }
+                        Entity* interface = owner->manager.getEntityByName("Interface");
+                        Panel* panel = interface->getComponent<Panel>();
+                        panel->setActive(false);
                         Music* music = owner->getComponent<Music>();
                         music->stopMusic();
                         Entity* gamefield = owner->manager.getEntityByName("Playfield");
