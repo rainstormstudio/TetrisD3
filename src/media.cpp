@@ -86,6 +86,33 @@ void Media::setBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y) {
     }
 }
 
+void Media::addBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y) {
+    if (x < numCols && y < numRows) {
+        SDL_Color originalColor = textDisplay[y][x]->getBackColor();
+        double red = originalColor.r;
+        double green = originalColor.g;
+        double blue = originalColor.b;
+        double alpha = originalColor.a;        
+        red = red * (alpha / 255.0);
+        green = green * (alpha / 255.0);
+        blue = blue * (alpha / 255.0);
+        alpha = 0.0;
+        double newRed = r;
+        double newGreen = g;
+        double newBlue = b;
+        double newAlpha = a;
+        red = newRed * (newAlpha / 255.0) + red * (1.0 - newAlpha / 255.0);
+        green = newGreen * (newAlpha / 255.0) + green * (1.0 - newAlpha / 255.0);
+        blue = newBlue * (newAlpha / 255.0) + blue * (1.0 - newAlpha / 255.0);
+        alpha = 255.0;
+        r = static_cast<Uint8>(round(red));
+        g = static_cast<Uint8>(round(green));
+        b = static_cast<Uint8>(round(blue));
+        a = static_cast<Uint8>(round(alpha));
+        textDisplay[y][x]->setBackColor(r, g, b, a);
+    }
+}
+
 SDL_Color Media::getForeColor(int x, int y) const {
     if (x < numCols && y < numRows) {
         return textDisplay[y][x]->getForeColor();

@@ -129,12 +129,9 @@ void Game::update() {
         }
         case MENU: {
             Debug::enabled = false;
-            Debug::msg("updating event", 1);
             event->update();
-            Debug::msg("updated event", 1);
-            Debug::msg("updating menu", 1);
+            bg->update();
             menu->update();
-            Debug::msg("updated event", 1);
 
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -166,6 +163,7 @@ void Game::update() {
         }
         case END_GAME: {
             event->update();
+            bg->update();
             menu->update();
             if (event->input[QUIT]) {
                 state = NO_GAME;
@@ -187,13 +185,14 @@ void Game::render() {
         }
         case MENU: {
             gfx->clear();
+            bg->render(0.2, 0.5, 0.5);
             menu->render();
             gfx->render();
             break;
         }
         case IN_GAME: {
             gfx->clear();
-            bg->render();
+            bg->render(1.0, 1.0, 1.0);
             manager->renderByLayer(Layer::MAP);
             manager->renderByLayer(Layer::OBJECTS);
             manager->renderByLayer(Layer::UI);
@@ -210,6 +209,7 @@ void Game::render() {
         }
         case END_GAME: {
             gfx->clear();
+            bg->render(0.0, 0.5, 0.5);
             menu->render();
             gfx->render();
             break;

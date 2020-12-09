@@ -113,6 +113,18 @@ public:
     void setBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y);
 
     /**
+     * @brief add the color to the current back color
+     * 
+     * @param r red
+     * @param g green
+     * @param b blue
+     * @param a alpha
+     * @param x the column number
+     * @param y the row number
+     */
+    void addBackColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a, int x, int y);
+
+    /**
      * @brief Get the Fore Color 
      * 
      * @param x the column number

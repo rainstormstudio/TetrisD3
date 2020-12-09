@@ -37,7 +37,7 @@ void BackgroundEffect::update() {
     }
 }
 
-void BackgroundEffect::render() {
+void BackgroundEffect::render(double Rratio, double Gratio, double Bratio) {
     Media* gfx = game->getGFX();
     for (int i = 0; i < dest.w; i ++) {
         for (int j = 0; j < dest.h; j ++) {
@@ -46,7 +46,10 @@ void BackgroundEffect::render() {
             CPixel* cell = new CPixel{
                 0,
                 0, 0, 0, 0,
-                calcR(i * (dest.h - j)), calcG((dest.w - i) * j), calcB(i * j), 255
+                round(Rratio * calcR(i * (dest.h - j))), 
+                round(Gratio * calcG((dest.w - i) * j)), 
+                round(Bratio * calcB(i * j)), 
+                255
             };
             gfx->drawPoint(cell, x, y);
             delete cell;

@@ -547,10 +547,10 @@ void Menu::render() {
             gfx->write("KEY MAPPING", dest.x + 4, dest.y + 18, 255, 255, 255, 200);
             gfx->write("QUIT GAME", dest.x + 4, dest.y + 20, 255, 255, 255, 200);
 
-            gfx->write(">", dest.x + 2, dest.y + 12 + option * 2, 0, 128, 255, 255);
+            gfx->write(">", dest.x + 2, dest.y + 12 + option * 2, 255, 128, 0, 255);
             for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 4) / 14.0)), 
                     i, dest.y + 12 + option * 2);
             }
@@ -577,10 +577,10 @@ void Menu::render() {
             gfx->write("MAIN MENU", dest.x + 4, dest.y + 14, 255, 255, 255, 200);
             gfx->write("QUIT GAME", dest.x + 4, dest.y + 16, 255, 255, 255, 200);
 
-            gfx->write(">", dest.x + 2, dest.y + 6 + option * 2, 0, 128, 255, 255);
+            gfx->write(">", dest.x + 2, dest.y + 6 + option * 2, 255, 128, 0, 255);
             for (int i = dest.x + 4; i < dest.x + 4 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 4) / 14.0)), 
                     i, dest.y + 6 + option * 2);
             }
@@ -634,10 +634,10 @@ void Menu::render() {
             gfx->write("SAVE TO CONFIG", dest.x + 2, dest.y + 12, 255, 255, 255, 200);
             gfx->write("BACK", dest.x + 2, dest.y + 14, 255, 255, 255, 200);
 
-            gfx->write(">", dest.x, dest.y + 4 + option * 2, 0, 128, 255, 255);
+            gfx->write(">", dest.x, dest.y + 4 + option * 2, 255, 128, 0, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
                     i, dest.y + 4 + option * 2);
             }
@@ -677,10 +677,10 @@ void Menu::render() {
 
             gfx->write("BACK", dest.x + 2, dest.y + 18, 255, 255, 255, 200);
 
-            gfx->write(">", dest.x, dest.y + 18, 0, 128, 255, 255);
+            gfx->write(">", dest.x, dest.y + 18, 255, 128, 0, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
                     i, dest.y + 18);
             }
@@ -703,13 +703,13 @@ void Menu::render() {
             gfx->write("================", dest.x, dest.y + 1, 255, 255, 255, 255);
             std::vector<int> scores = saves->getScores(6);
             for (int i = 0; i < 6; i ++) {
-                gfx->write(std::to_string(i + 1) + ". " + Math::format(scores[i], 10, ' '), dest.x + 2, dest.y + 3 + i * 2);
+                gfx->write(std::to_string(i + 1) + ". " + Math::format(scores[i], 10, ' '), dest.x + 2, dest.y + 3 + i * 2, 255, 255, 255, 200);
             }
             gfx->write("BACK", dest.x + 2, dest.y + 17, 255, 255, 255, 200);
-            gfx->write(">", dest.x, dest.y + 17, 0, 128, 255, 255);
+            gfx->write(">", dest.x, dest.y + 17, 255, 128, 0, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
                     i, dest.y + 17);
             }
@@ -734,17 +734,17 @@ void Menu::render() {
             int score = panel->getScore();
             std::vector<int> times = panel->getTime();
             std::string time = Math::format(times[0], 2, '0') + ":" + Math::format(times[1], 2, '0') + ":" + Math::format(times[2], 2, '0');
-            gfx->write("SCORE:      " + Math::format(score, 8, ' '), dest.x, dest.y + 3);
-            gfx->write("TIME:       " + Math::format(time, 8, ' '), dest.x, dest.y + 5);
+            gfx->write("SCORE:      " + Math::format(score, 8, ' '), dest.x, dest.y + 3, 255, 255, 255, 200);
+            gfx->write("TIME:       " + Math::format(time, 8, ' '), dest.x, dest.y + 5, 255, 255, 255, 200);
 
             gfx->write("NEXT GAME", dest.x + 2, dest.y + 8, 255, 255, 255, 200);
             gfx->write("CURRENT SCORES", dest.x + 2, dest.y + 10, 255, 255, 255, 200);
             gfx->write("MAIN MENU", dest.x + 2, dest.y + 12, 255, 255, 255, 200);
             gfx->write("QUIT", dest.x + 2, dest.y + 14, 255, 255, 255, 200);
-            gfx->write(">", dest.x, dest.y + 8 + option * 2, 0, 128, 255, 255);
+            gfx->write(">", dest.x, dest.y + 8 + option * 2, 255, 128, 0, 255);
             for (int i = dest.x + 2; i < dest.x + 2 + optionCol; i ++) {
-                gfx->setBackColor(
-                    0, 128, 255, 
+                gfx->addBackColor(
+                    255, 128, 0, 
                     round(200.0 * ((optionCol - i + dest.x + 2) / 14.0)),
                     i, dest.y + 8 + option * 2);
             }

@@ -19,7 +19,7 @@ public:
 
     void update();
 
-    void render();
+    void render(double Rratio, double Gratio, double Bratio);
 };
 
 #endif
