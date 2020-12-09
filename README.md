@@ -5,6 +5,7 @@ TetrisD3 (Tetris Dec 3) is a variation of the original Tetris.
 Lines can be cleared by moving different tetrominoes dropping onto the playfield. Then the player can get points for scores based on how many lines cleared.
 ### Screenshots
 ![screenshot 1](screenshots/title.png)
+![screenshot 12](screenshots/countdown.png)
 ![screenshot 2](screenshots/gameplay001.png)
 ![screenshot 3](screenshots/paused.png)
 ![screenshot 4](screenshots/gameplay002.png)
