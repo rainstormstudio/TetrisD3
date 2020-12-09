@@ -196,15 +196,15 @@ void Menu::moveOption(int delta) {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
-                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 10, 1)) {
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 15, 1)) {
                     option = 0;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 15, 1)) {
                     option = 1;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 15, 1)) {
                     option = 2;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 18, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 18, 15, 1)) {
                     option = 3;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 20, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 20, 15, 1)) {
                     option = 4;
                 }
             } else {
@@ -220,17 +220,17 @@ void Menu::moveOption(int delta) {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
-                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 6, 10, 1)) {
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 6, 15, 1)) {
                     option = 0;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 8, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 8, 15, 1)) {
                     option = 1;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 10, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 10, 15, 1)) {
                     option = 2;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 12, 15, 1)) {
                     option = 3;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 14, 15, 1)) {
                     option = 4;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x + 2, dest.y + 16, 15, 1)) {
                     option = 5;
                 }
             } else {
@@ -246,17 +246,17 @@ void Menu::moveOption(int delta) {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
-                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 4, 14, 1)) {
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 4, 15, 1)) {
                     option = 0;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 6, 14, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 6, 15, 1)) {
                     option = 1;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 14, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 15, 1)) {
                     option = 2;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 14, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 15, 1)) {
                     option = 3;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 14, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 15, 1)) {
                     option = 4;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 14, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 15, 1)) {
                     option = 5;
                 }
             } else {
@@ -272,13 +272,13 @@ void Menu::moveOption(int delta) {
             int lastoption = option;
             if (delta == 0) {
                 InputManager* event = game->getEvent();
-                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 10, 1)) {
+                if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 8, 15, 1)) {
                     option = 0;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 10, 15, 1)) {
                     option = 1;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 12, 15, 1)) {
                     option = 2;
-                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 10, 1)) {
+                } else if (Math::isInside(event->cursor.x, event->cursor.y, dest.x, dest.y + 14, 15, 1)) {
                     option = 3;
                 }
             } else {
