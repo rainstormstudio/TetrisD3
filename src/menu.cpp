@@ -550,21 +550,33 @@ void Menu::render() {
             gfx->write("SETTINGS", dest.x, dest.y, 255, 255, 255, 255);
             gfx->write("----------", dest.x, dest.y + 1, 255, 255, 255, 255);
             gfx->write("MUTE MUSIC", dest.x + 2, dest.y + 4, 255, 255, 255, 200);
+            gfx->setCh(17, dest.x + 14, dest.y + 4); gfx->setCh(16, dest.x + 18, dest.y + 4);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 14, dest.y + 4);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 18, dest.y + 4);
             if (cfg->mute_music) {
-                gfx->write("ON", dest.x + 14, dest.y + 4, 0, 255, 0, 255);
+                gfx->write(" ON", dest.x + 15, dest.y + 4, 0, 255, 0, 255);
             } else {
-                gfx->write("OFF", dest.x + 14, dest.y + 4, 255, 0, 0, 255);
+                gfx->write("OFF", dest.x + 15, dest.y + 4, 255, 0, 0, 255);
             }
             gfx->write("MUTE SFX", dest.x + 2, dest.y + 6, 255, 255, 255, 200);
+            gfx->setCh(17, dest.x + 14, dest.y + 6); gfx->setCh(16, dest.x + 18, dest.y + 6);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 14, dest.y + 6);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 18, dest.y + 6);
             if (cfg->mute_sfx) {
-                gfx->write("ON", dest.x + 14, dest.y + 6, 0, 255, 0, 255);
+                gfx->write(" ON", dest.x + 15, dest.y + 6, 0, 255, 0, 255);
             } else {
-                gfx->write("OFF", dest.x + 14, dest.y + 6, 255, 0, 0, 255);
+                gfx->write("OFF", dest.x + 15, dest.y + 6, 255, 0, 0, 255);
             }
             gfx->write("MUSIC VOLUME", dest.x + 2, dest.y + 8, 255, 255, 255, 200);
-            gfx->write(Math::format(cfg->music_volume, 3, ' '), dest.x + 14, dest.y + 8, 255, 255, 0, 255);
+            gfx->setCh(17, dest.x + 14, dest.y + 8); gfx->setCh(16, dest.x + 18, dest.y + 8);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 14, dest.y + 8);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 18, dest.y + 8);
+            gfx->write(Math::format(cfg->music_volume, 3, ' '), dest.x + 15, dest.y + 8, 255, 255, 0, 255);
             gfx->write("SFX VOLUME", dest.x + 2, dest.y + 10, 255, 255, 255, 200);
-            gfx->write(Math::format(cfg->sfx_volume, 3, ' '), dest.x + 14, dest.y + 10, 255, 255, 0, 255);
+            gfx->setCh(17, dest.x + 14, dest.y + 10); gfx->setCh(16, dest.x + 18, dest.y + 10);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 14, dest.y + 10);
+            gfx->setForeColor(255, 255, 255, 200, dest.x + 18, dest.y + 10);
+            gfx->write(Math::format(cfg->sfx_volume, 3, ' '), dest.x + 15, dest.y + 10, 255, 255, 0, 255);
             gfx->write("SAVE TO CONFIG", dest.x + 2, dest.y + 12, 255, 255, 255, 200);
             gfx->write("BACK", dest.x + 2, dest.y + 14, 255, 255, 255, 200);
 

@@ -42,7 +42,7 @@ Config::Config(std::string filename) {
     configFilePath = filename;
     // defaults
     savePath = "./save/scores.txt";
-    tilesetPath = "./assets/tilesets/Curses_square_24.png";
+    tilesetPath = "./assets/tilesets/TetrisD3tileset.png";
     fontPath = "./assets/fonts/Monaco.ttf";
     titlePath = "./assets/txt/title.txt";
     UIPath = "./assets/txt/UI.txt";

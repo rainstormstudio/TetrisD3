@@ -2,7 +2,7 @@
 SAVE=./save/scores.txt
 
 # graphics
-TILESET=./assets/tilesets/Curses_square_24.png
+TILESET=./assets/tilesets/TetrisD3tileset.png
 UI=./assets/txt/UI.txt
 TETROMINOES=./assets/txt/tetrominoes.txt
 
@@ -19,9 +19,9 @@ LEVELUP_SFX=./assets/audio/tetris99/levelup.wav
 GAMEOVER_SFX=./assets/audio/tetris99/gameover.wav
 
 # window info
-FULLSCREEN=FALSE
-SCREENWIDTH=1280
-SCREENHEIGHT=960
+FULLSCREEN=TRUE
+SCREENWIDTH=1920
+SCREENHEIGHT=1080
 
 # music settings
 # volume range: 0 - 128

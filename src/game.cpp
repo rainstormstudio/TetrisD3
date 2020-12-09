@@ -105,7 +105,7 @@ void Game::init() {
     Debug::msg("cfg constructed", 1);
     saves = new Saves(cfg->savePath);
     Debug::msg("saves constructed", 1);
-    gfx = new Media("TetrisD3", cfg->tilesetPath, 16, 16, cfg->getFullscreenFlag(), cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 30, 40);
+    gfx = new Media("TetrisD3", cfg->tilesetPath, 16, 16, cfg->getFullscreenFlag(), cfg->fontPath, cfg->screenWidth, cfg->screenHeight, 26, 40);
     Debug::msg("gfx constructed", 1);
     event = new InputManager(cfg, gfx);
     Debug::msg("event constructed", 1);

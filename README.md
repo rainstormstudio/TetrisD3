@@ -12,11 +12,9 @@ Lines can be cleared by moving different tetrominoes dropping onto the playfield
 ![screenshot 6](screenshots/gameplay005.png)
 ![screenshot 7](screenshots/gameplay006.png)
 ![screenshot 8](screenshots/gameplay007.png)
-![screenshot 9](screenshots/gameplay008.png)
-![screenshot 10](screenshots/gameplay009.png)
-![screenshot 11](screenshots/gameplay010.png)
-![screenshot 12](screenshots/gameover.png)
-![screenshot 13](screenshots/scores.png)
+![screenshot 9](screenshots/gameover.png)
+![screenshot 10](screenshots/settings.png)
+![screenshot 11](screenshots/scores.png)
 ### Definitions
 - **tetromino**
 - **playfield**
